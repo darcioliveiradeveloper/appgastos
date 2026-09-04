@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: gastos-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false # preencha no dashboard Render
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false # ex: https://seu-app.vercel.app,http://localhost:5173

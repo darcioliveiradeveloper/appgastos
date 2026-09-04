@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.expo/
+.expo-shared/
+.env
+backend/.env
+frontend/dist
+mobile/.expo
+.DS_Store
