@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.js';
 import transacoesRoutes from './routes/transacoes.js';
 import investimentosRoutes from './routes/investimentos.js';
 import adminRoutes from './routes/admin.js';
+import cartoesRoutes from './routes/cartoes.js';
 import { seedAdmin } from './config/seedAdmin.js';
 
 dotenv.config();
@@ -32,6 +33,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/transacoes', transacoesRoutes);
 app.use('/api/investimentos', investimentosRoutes);
+app.use('/api/cartoes', cartoesRoutes);
 
 // fallback para teste sem banco
 app.get('/api/mock/resumo', (req, res) => {

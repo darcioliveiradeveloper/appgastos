@@ -1,0 +1,9 @@
+import { Router } from 'express';
+import { auth } from '../middleware/auth.js';
+import Cartao from '../models/Cartao.js';
+const router = Router();
+router.use(auth);
+router.get('/', async (req,res)=> res.json(await Cartao.find({user:req.userId}).sort({createdAt:-1})));
+router.post('/', async (req,res)=> { const c = await Cartao.create({ ...req.body, user:req.userId }); res.status(201).json(c); });
+router.delete('/:id', async (req,res)=> { await Cartao.deleteOne({_id:req.params.id, user:req.userId}); res.json({msg:'Removido'}); });
+export default router;
