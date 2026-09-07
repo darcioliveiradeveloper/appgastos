@@ -32,7 +32,7 @@ export default function BemVindo(){
         <section className="grid md:grid-cols-3 gap-4">
           <Feature icon="📊" title="Dashboard inteligente" desc="Receitas, despesas e saldo em tempo real, pizza por categoria e evolução 6 meses." />
           <Feature icon="💳" title="Cartão e Receitas" desc="Separe por Receitas, Despesas e Cartão. Cada lançamento com categoria e conta." />
-          <Feature icon="📴" title="Offline + Nuvem" desc="Sem internet? Salva local e sincroniza com Atlas quando voltar. Backup CSV/JSON." />
+          <Feature icon="📴" title="Offline + Nuvem" desc="PWA Offline • Nuvem Atlas • Backup automático. Sem internet? Salva local e sincroniza quando voltar." />
         </section>
 
         {/* Dicas */}
@@ -57,12 +57,9 @@ export default function BemVindo(){
           </ul>
         </section>
 
-        <div className="text-center pb-8">
+        <div className="text-center pb-8 space-y-3">
           <Link to={logado? "/dashboard" : "/login"} className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:opacity-90">Acessar AppGastos →</Link>
-        </div>
-
-        <div className="text-center">
-          <span className="inline-flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-2 rounded-full text-xs">💾 PWA Offline • Nuvem Atlas • Backup automático</span>
+          <div><Link to="/login" className="inline-block text-sm text-slate-500 border border-slate-200 px-6 py-2 rounded-xl hover:bg-slate-50">Sair</Link></div>
         </div>
       </div>
     </div>
