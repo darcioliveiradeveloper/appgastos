@@ -1,25 +1,23 @@
 import User from '../models/User.js';
 
 export const seedAdmin = async () => {
-  const email = 'admin@teste.com';
-  let admin = await User.findOne({ email });
-  if (!admin) {
-    admin = await User.create({ nome: 'Master Admin', email, senha: 'admin123', role: 'admin' });
-    console.log('👑 Admin criado: admin@teste.com / admin123');
-  } else if (admin.role !== 'admin') {
-    admin.role = 'admin';
-    admin.senha = 'admin123'; // vai hashear no pre-save
-    // força re-hash
-    admin.markModified('senha');
-    await admin.save();
-    console.log('👑 Admin atualizado para role admin');
-  } else {
-    // garante senha admin123 (se mudou)
-    const ok = await admin.compararSenha('admin123');
-    if (!ok) {
-      admin.senha = 'admin123';
-      await admin.save();
-      console.log('🔑 Senha admin resetada para admin123');
+  const seeds = [
+    { nome: 'Master Admin', email: 'admin@drso.com', senha: 'admin123', role: 'admin' },
+    { nome: 'Usuário Teste', email: 'teste@drso.com', senha: '123456', role: 'user' },
+    // manter legado para compatibilidade
+    { nome: 'Master Admin', email: 'admin@teste.com', senha: 'admin123', role: 'admin' },
+  ];
+  for (const s of seeds) {
+    let u = await User.findOne({ email: s.email });
+    if (!u) {
+      await User.create(s);
+      console.log(`👑 Seed criado: ${s.email} / ${s.senha} (${s.role})`);
+    } else {
+      let changed = false;
+      if (u.role !== s.role) { u.role = s.role; changed = true; }
+      const ok = await u.compararSenha(s.senha);
+      if (!ok) { u.senha = s.senha; changed = true; }
+      if (changed) { await u.save(); console.log(`🔑 Seed atualizado: ${s.email}`); }
     }
   }
 };
