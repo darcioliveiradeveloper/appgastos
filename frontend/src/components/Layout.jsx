@@ -13,11 +13,19 @@ export default function Layout({ children }) {
   const MenuLink = ({to, children}) => (
     <Link to={to} onClick={()=>setOpen(false)} className={`px-3 py-2 rounded-xl text-sm font-semibold transition ${isActive(to)}`}>{children}</Link>
   );
+  const isWelcome = location.pathname === '/';
+  if (isWelcome) {
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <main className="p-0">{children}</main>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-slate-50">
       <nav className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white sticky top-0 z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-          <Link to={logado? "/dashboard":"/"} className="font-extrabold text-xl tracking-tight flex items-center gap-2">💰 AppGastos</Link>
+          <Link to="/dashboard" className="font-extrabold text-xl tracking-tight flex items-center gap-2">💰 AppGastos</Link>
           {/* Desktop */}
           <div className="hidden lg:flex gap-1 items-center">
             {logado ? <>
