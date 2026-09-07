@@ -5,19 +5,15 @@ export default function BemVindo(){
   return (
     <div className="space-y-8 -m-4">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 text-white p-8 md:p-12 rounded-b-[2.5rem] shadow-xl">
+      <section className="bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 text-white p-8 md:p-12 rounded-b-[2.5rem] shadow-xl relative">
+        <Link to="/login" className="absolute top-4 right-4 bg-white text-indigo-600 px-4 py-2 rounded-full text-sm font-bold shadow hover:scale-105 transition">Entrar →</Link>
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="flex-1">
               <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur px-3 py-1 rounded-full text-sm mb-4">💰 PWA Offline • Nuvem Atlas</div>
               <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">Bem-vindo ao <span className="text-yellow-200">AppGastos</span></h1>
               <p className="text-indigo-100 mt-3 text-lg">Seu controle financeiro pessoal, rápido e offline. Gastos, receitas, cartão e investimentos em um só lugar — no notebook e no celular.</p>
-              <div className="flex flex-wrap gap-3 mt-6">
-                {logado ? <Link to="/dashboard" className="bg-white text-indigo-600 px-6 py-3 rounded-xl font-bold shadow hover:scale-105 transition">Ir para Dashboard →</Link>
-                : <Link to="/login" className="bg-white text-indigo-600 px-6 py-3 rounded-xl font-bold shadow hover:scale-105 transition">Começar agora →</Link>}
-                <Link to="/relatorios" className="bg-white/10 border border-white/30 backdrop-blur px-6 py-3 rounded-xl font-semibold hover:bg-white/20">Ver Relatórios</Link>
-              </div>
-              <p className="text-xs text-indigo-200 mt-3">Instalável no celular: Chrome ⋮ → Adicionar à tela inicial</p>
+              <p className="text-xs text-indigo-200 mt-4">Role a tela para ver dicas e sugestões ↓</p>
             </div>
             <div className="w-64 h-64 bg-white rounded-[2rem] shadow-2xl p-6 hidden md:flex flex-col justify-between">
               <div>
@@ -64,9 +60,9 @@ export default function BemVindo(){
           </ul>
         </section>
 
-        <div className="text-center pb-4">
+        <div className="text-center pb-8 space-y-3">
           <Link to={logado? "/dashboard" : "/login"} className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:opacity-90">Acessar AppGastos →</Link>
-          <p className="text-xs text-slate-400 mt-2">Suporte: gere código em 👑 Master (admin@teste.com) para novos usuários.</p>
+          <div><Link to="/login" className="text-sm text-slate-500 hover:text-indigo-600 underline">Já tenho conta? Entrar</Link> <span className="text-slate-300">•</span> <button onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} className="text-sm text-slate-500 hover:text-indigo-600 underline">↑ Voltar ao topo</button></div>
         </div>
       </div>
     </div>

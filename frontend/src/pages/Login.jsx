@@ -15,7 +15,7 @@ export default function Login() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       // redireciona admin para painel
-      if (data.user?.role === 'admin') nav('/admin'); else nav('/');
+      if (data.user?.role === 'admin') nav('/admin'); else nav('/dashboard');
     } catch (err) { setMsg(err.response?.data?.msg || err.message); }
   };
   return (
@@ -38,13 +38,15 @@ export default function Login() {
             {isRegister && (
               <div>
                 <input className="w-full border-2 border-amber-300 p-3 rounded-xl focus:ring-2 focus:ring-amber-400 outline-none bg-amber-50" placeholder="Código de ativação (ex: APP-XXXX-XXXX)" value={codigo} onChange={e=>setCodigo(e.target.value.toUpperCase())} required/>
-                <p className="text-xs text-slate-500 mt-1">🔑 Código fornecido pelo suporte. Master: admin@teste.com</p>
+                <p className="text-xs text-slate-500 mt-1">🔑 Código fornecido pelo suporte</p>
               </div>
             )}
             {msg && <p className="bg-red-50 text-red-600 text-sm p-3 rounded-xl border border-red-200">{msg}</p>}
             <button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3 rounded-xl font-bold shadow hover:opacity-90">{isRegister ? 'Ativar e Criar Conta' : 'Entrar no AppGastos'}</button>
           </form>
-          <p className="text-xs text-slate-400 text-center mt-4">Acesso master: admin@teste.com / admin123 → gera códigos</p>
+          <div className="text-center mt-4">
+            <Link to="/" className="text-sm text-slate-500 hover:text-indigo-600 underline">← Voltar à tela inicial</Link>
+          </div>
         </div>
       </div>
     </div>
