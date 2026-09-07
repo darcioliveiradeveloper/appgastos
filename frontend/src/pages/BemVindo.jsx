@@ -1,7 +1,31 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function BemVindo(){
   const logado = !!localStorage.getItem('token');
+  const [fechado, setFechado] = useState(false);
+  const handleSair = () => {
+    try { window.close(); } catch {}
+    setTimeout(() => {
+      if (!window.closed) {
+        // fallback: tenta fechar via history ou mostra tela fechada
+        setFechado(true);
+        // tenta também navegar para blank para simular fechar
+        setTimeout(() => { try { window.location.href = 'about:blank'; } catch {} }, 500);
+      }
+    }, 300);
+  };
+  if (fechado) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white p-8 text-center">
+        <div>
+          <p className="text-5xl mb-4">👋</p>
+          <h1 className="text-2xl font-bold">App fechado</h1>
+          <p className="text-slate-400 text-sm mt-2">Pode fechar esta janela ou aba.</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="space-y-8 -m-4">
       {/* Hero */}
@@ -59,7 +83,7 @@ export default function BemVindo(){
 
         <div className="text-center pb-8 space-y-3">
           <Link to={logado? "/dashboard" : "/login"} className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:opacity-90">Acessar AppGastos →</Link>
-          <div><Link to="/login" className="inline-block text-sm text-slate-500 border border-slate-200 px-6 py-2 rounded-xl hover:bg-slate-50">Sair</Link></div>
+          <div><button onClick={handleSair} className="inline-block text-sm text-slate-500 border border-slate-200 px-6 py-2 rounded-xl hover:bg-slate-50">Sair</button></div>
         </div>
       </div>
     </div>
