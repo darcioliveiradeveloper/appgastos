@@ -5,6 +5,8 @@ import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import transacoesRoutes from './routes/transacoes.js';
 import investimentosRoutes from './routes/investimentos.js';
+import adminRoutes from './routes/admin.js';
+import { seedAdmin } from './config/seedAdmin.js';
 
 dotenv.config();
 const app = express();
@@ -23,9 +25,11 @@ app.use(cors({
 app.use(express.json());
 
 await connectDB();
+await seedAdmin();
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/transacoes', transacoesRoutes);
 app.use('/api/investimentos', investimentosRoutes);
 

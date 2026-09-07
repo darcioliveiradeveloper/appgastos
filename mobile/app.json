@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Gastos",
-    "slug": "gastos",
+    "name": "AppGastos",
+    "slug": "appgastos",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

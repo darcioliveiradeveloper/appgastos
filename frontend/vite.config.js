@@ -9,15 +9,16 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'Gastos - Controle Financeiro',
-        short_name: 'Gastos',
-        description: 'Controle de gastos pessoais, investimentos e relatórios',
-        theme_color: '#0f172a',
+        name: 'AppGastos - Finanças Pessoais',
+        short_name: 'AppGastos',
+        description: 'AppGastos - controle financeiro, gastos e investimentos com PWA offline',
+        theme_color: '#4f46e5',
         background_color: '#ffffff',
         display: 'standalone',
+        display_override: ['window-controls-overlay'],
         icons: [
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' }
+          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
         ]
       },
       workbox: {
