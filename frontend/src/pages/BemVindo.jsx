@@ -30,7 +30,7 @@ export default function BemVindo(){
     <div className="space-y-8 -m-4">
       {/* Hero */}
       <section className="bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 text-white p-8 md:p-12 rounded-b-[2.5rem] shadow-xl relative">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="flex-1">
               <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">Bem-vindo ao <span className="text-yellow-200">AppGastos</span></h1>
@@ -51,16 +51,16 @@ export default function BemVindo(){
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 space-y-8">
+      <div className="max-w-6xl mx-auto px-4 space-y-8 w-full overflow-hidden">
         {/* O que faz */}
-        <section className="grid md:grid-cols-3 gap-4">
+        <section className="grid md:grid-cols-3 gap-4 w-full">
           <Feature icon="📊" title="Dashboard inteligente" desc="Receitas, despesas e saldo em tempo real, pizza por categoria e evolução 6 meses." />
           <Feature icon="💳" title="Cartão e Receitas" desc="Separe por Receitas, Despesas e Cartão. Cada lançamento com categoria e conta." />
           <Feature icon="📴" title="Offline + Nuvem" desc="PWA Offline • Nuvem Atlas • Backup automático. Sem internet? Salva local e sincroniza quando voltar." />
         </section>
 
         {/* Dicas */}
-        <section className="bg-white rounded-2xl shadow p-6">
+        <section className="bg-white rounded-2xl shadow border border-slate-100 p-5 w-full overflow-hidden">
           <h2 className="text-xl font-extrabold text-slate-800">💡 Dicas para usar bem</h2>
           <div className="grid md:grid-cols-2 gap-4 mt-4 text-sm">
             <Tip n="1" t="Registre na hora" d="Lance a despesa assim que pagar. O PWA offline salva mesmo sem sinal." />
@@ -71,7 +71,7 @@ export default function BemVindo(){
         </section>
 
         {/* Sugestões */}
-        <section className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-6">
+        <section className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 w-full overflow-hidden">
           <h2 className="text-xl font-extrabold text-amber-900">🚀 Sugestões para evoluir suas finanças</h2>
           <ul className="grid md:grid-cols-2 gap-3 mt-3 text-sm text-amber-900">
             <li className="bg-white p-3 rounded-xl">🎯 <b>Defina meta mensal:</b> ex: gastar até R$ 3.000 em despesas.</li>
@@ -89,5 +89,5 @@ export default function BemVindo(){
     </div>
   )
 }
-function Feature({icon, title, desc}){ return <div className="bg-white p-5 rounded-2xl shadow border border-slate-100"><div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-xl">{icon}</div><h3 className="font-bold mt-3">{title}</h3><p className="text-sm text-slate-500">{desc}</p></div> }
+function Feature({icon, title, desc}){ return <div className="bg-white p-5 rounded-2xl shadow border border-slate-100 w-full overflow-hidden"><div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-xl">{icon}</div><h3 className="font-extrabold mt-3 text-slate-800">{title}</h3><p className="text-sm text-slate-500">{desc}</p></div> }
 function Tip({n,t,d}){ return <div className="flex gap-3 bg-slate-50 p-3 rounded-xl"><div className="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0">{n}</div><div><p className="font-bold">{t}</p><p className="text-slate-500">{d}</p></div></div> }
