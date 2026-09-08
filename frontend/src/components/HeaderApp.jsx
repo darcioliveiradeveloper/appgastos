@@ -31,7 +31,7 @@ export default function HeaderApp(){
     document.documentElement.setAttribute('data-tema', novo);
     localStorage.setItem('tema', novo);
   };
-  const sair = ()=>{ localStorage.removeItem('token'); localStorage.removeItem('user'); nav('/login'); };
+  const sair = ()=>{ localStorage.removeItem('token'); localStorage.removeItem('user'); nav('/'); };
   const salvarNome = async ()=>{
     if (!nomeInput.trim()) { setMsg('Informe nome'); return; }
     try { const r = await api.post('/me/nome', { nome: nomeInput.trim() }); setUser(r.data); localStorage.setItem('user', JSON.stringify(r.data)); setShowNome(false); setMsg(''); } catch(e){ setMsg(e.response?.data?.msg || e.message); }
