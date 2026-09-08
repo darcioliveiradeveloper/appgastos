@@ -8,6 +8,15 @@ export default function Login() {
   const [email, setEmail] = useState(''); const [senha, setSenha] = useState(''); const [isRegister, setIsRegister] = useState(false);
   const [nome, setNome] = useState(''); const [codigo, setCodigo] = useState(''); const [msg, setMsg] = useState('');
   const nav = useNavigate();
+  const formatCodigo = (v) => {
+    let raw = v.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    // força prefixo APP
+    // limita a 11 chars alfanum (APP + 8)
+    raw = raw.slice(0, 11);
+    if (raw.length <= 3) return raw;
+    if (raw.length <= 7) return raw.slice(0,3) + '-' + raw.slice(3);
+    return raw.slice(0,3) + '-' + raw.slice(3,7) + '-' + raw.slice(7);
+  };
   const submit = async (e) => {
     e.preventDefault(); setMsg('');
     try {
@@ -50,8 +59,8 @@ export default function Login() {
             {isRegister && (
               <div>
                 <label className="text-sm text-slate-600">Código de ativação</label>
-                <input className="w-full bg-amber-50 border-2 border-amber-300 p-3 rounded-xl mt-1 focus:outline-none focus:border-amber-500 uppercase" placeholder="APP-XXXX-XXXX" value={codigo} onChange={e=>setCodigo(e.target.value.toUpperCase())} required/>
-                <p className="text-xs text-slate-500 mt-1">Código fornecido pelo suporte</p>
+                <input className="w-full bg-amber-50 border-2 border-amber-300 p-3 rounded-xl mt-1 focus:outline-none focus:border-amber-500 uppercase tracking-widest font-mono" placeholder="APP-XXXX-XXXX" value={codigo} onChange={e=>setCodigo(formatCodigo(e.target.value))} maxLength={13} required/>
+                <p className="text-xs text-slate-500 mt-1">Formato: APP-XXXX-XXXX • 13 caracteres</p>
               </div>
             )}
             {msg && <p className="bg-red-50 text-red-600 text-sm p-3 rounded-xl border border-red-200">{msg}</p>}
