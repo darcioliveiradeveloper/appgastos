@@ -61,7 +61,7 @@ export default function HeaderApp(){
           </div>
         </div>
       </header>
-      <div className="max-w-6xl mx-auto px-4 flex justify-center" style={{marginTop:'-28px', position:'relative', zIndex:5}}>
+      <div className="max-w-6xl mx-auto px-4 flex justify-center" style={{marginTop:'-32px', position:'relative', zIndex:5}}>
         <span className="data-pill capitalize">{hojeCap}</span>
       </div>
 
