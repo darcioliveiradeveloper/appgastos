@@ -15,7 +15,7 @@ export default defineConfig({
         theme_color: '#1e1b4b',
         background_color: '#ffffff',
         display: 'standalone',
-        start_url: '/login',
+        start_url: '/',
         display_override: ['window-controls-overlay'],
         icons: [
           { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
