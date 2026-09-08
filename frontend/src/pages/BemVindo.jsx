@@ -29,7 +29,7 @@ export default function BemVindo(){
   return (
     <div className="space-y-8 w-full overflow-x-hidden">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 text-white p-8 md:p-12 rounded-b-[2.5rem] shadow-xl relative">
+      <section className="bg-gradient-to-br from-[#1e1b4b] via-[#4338ca] to-[#06b6d4] text-white p-8 md:p-12 rounded-b-[2.5rem] shadow-xl relative">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="flex-1">
@@ -82,7 +82,7 @@ export default function BemVindo(){
         </section>
 
         <div className="text-center pb-8 space-y-3">
-          <Link to={logado? "/dashboard" : "/login"} className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:opacity-90">Acessar AppGastos →</Link>
+          <Link to={logado? "/dashboard" : "/login"} className="inline-block bg-gradient-to-r from-[#4338ca] to-[#06b6d4] text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:opacity-90">Acessar AppGastos →</Link>
           <div><button onClick={handleSair} className="inline-block text-sm text-slate-500 border border-slate-200 px-6 py-2 rounded-xl hover:bg-slate-50">Sair</button></div>
         </div>
       </div>

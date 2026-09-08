@@ -29,9 +29,9 @@ export default function Login() {
     } catch (err) { setMsg(err.response?.data?.msg || err.message); }
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#3b0764] via-[#7c3aed] to-[#c084fc] p-4 w-full overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1e1b4b] via-[#4338ca] to-[#06b6d4] p-4 w-full overflow-hidden">
       <div className="w-full max-w-sm bg-white rounded-[1.5rem] shadow-2xl overflow-hidden">
-        <div className="bg-gradient-to-br from-[#4c1d95] via-[#7c3aed] to-[#a78bfa] p-6 text-white text-center rounded-t-[1.5rem]">
+        <div className="bg-gradient-to-br from-[#1e1b4b] via-[#4338ca] to-[#06b6d4] p-6 text-white text-center rounded-t-[1.5rem]">
           <h1 className="text-2xl font-extrabold">AppGastos</h1>
           <p className="text-purple-100 text-sm mt-1">Controle Financeiro Pessoal</p>
           <p className="text-purple-200 text-xs mt-1">{VERSAO}</p>
@@ -65,7 +65,7 @@ export default function Login() {
             )}
             {msg && <p className="bg-red-50 text-red-600 text-sm p-3 rounded-xl border border-red-200">{msg}</p>}
             <div className="flex gap-2">
-              <button className="flex-1 bg-[#7c3aed] hover:bg-[#6d28d9] text-white px-6 py-3 rounded-xl font-bold shadow">Entrar</button>
+              <button className="flex-1 bg-[#4338ca] hover:bg-[#3730a3] text-white px-6 py-3 rounded-xl font-bold shadow">Entrar</button>
               <button type="button" onClick={()=>nav('/')} className="px-6 py-3 rounded-xl font-bold border border-slate-300 text-slate-600 hover:bg-slate-50">Voltar</button>
               <button type="button" onClick={()=>{ try{ window.close(); }catch{}; setTimeout(()=>{ if(!window.closed) window.location.href='about:blank'; },300); }} className="px-6 py-3 rounded-xl font-bold border border-red-200 text-red-600 hover:bg-red-50">Sair</button>
             </div>

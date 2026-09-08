@@ -12,7 +12,7 @@ export default defineConfig({
         name: 'AppGastos - Finanças Pessoais',
         short_name: 'AppGastos',
         description: 'AppGastos - controle financeiro, gastos e investimentos com PWA offline',
-        theme_color: '#4f46e5',
+        theme_color: '#1e1b4b',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/login',

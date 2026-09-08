@@ -15,7 +15,7 @@ export default function HeaderApp(){
   const [msg, setMsg] = useState('');
 
   useEffect(()=>{
-    const tema = localStorage.getItem('tema') || 'roxo';
+    const tema = localStorage.getItem('tema') || 'azul';
     document.documentElement.setAttribute('data-tema', tema);
     // busca usuario
     const localUser = (()=>{ try{ return JSON.parse(localStorage.getItem('user')||'null'); }catch{ return null; }})();
@@ -25,7 +25,7 @@ export default function HeaderApp(){
 
   const trocarTema = ()=>{
     const temas = ['azul','vermelho','verde','roxo','amarelo'];
-    const atual = document.documentElement.getAttribute('data-tema') || 'roxo';
+    const atual = document.documentElement.getAttribute('data-tema') || 'azul';
     const idx = (temas.indexOf(atual)+1)%temas.length;
     const novo = temas[idx];
     document.documentElement.setAttribute('data-tema', novo);
@@ -50,7 +50,7 @@ export default function HeaderApp(){
         <div className="topo-inner">
           <div className="topo-linha1">AppGastos - Controle Financeiro</div>
           <div className="topo-linha2">
-            <span>{user ? user.nome : 'Carregando...'} {user?.email ? `• ${user.email.split('@')[0]}` : ''}</span>
+            <span>{user ? user.nome : 'Carregando...'}</span>
             <span className="topo-botoes">
               <button className="btn-header-icon" title="Editar nome" onClick={()=>{ setNomeInput(user?.nome||''); setShowNome(true); }}>✏️</button>
               <button className="btn-header-icon" title="Trocar senha" onClick={()=>setShowSenha(true)}>🔒</button>
@@ -61,7 +61,7 @@ export default function HeaderApp(){
           </div>
         </div>
       </header>
-      <div className="max-w-6xl mx-auto px-4" style={{marginTop:'-18px', position:'relative', zIndex:5}}>
+      <div className="max-w-6xl mx-auto px-4" style={{marginTop:'8px', position:'relative', zIndex:5}}>
         <span className="data-pill">{hojeCap}</span>
       </div>
 
