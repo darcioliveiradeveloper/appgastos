@@ -61,8 +61,8 @@ export default function HeaderApp(){
           </div>
         </div>
       </header>
-      <div className="max-w-6xl mx-auto px-4" style={{marginTop:'8px', position:'relative', zIndex:5}}>
-        <span className="data-pill">{hojeCap}</span>
+      <div className="max-w-6xl mx-auto px-4 flex justify-center" style={{marginTop:'-28px', position:'relative', zIndex:5}}>
+        <span className="data-pill capitalize">{hojeCap}</span>
       </div>
 
       {/* Modais */}
