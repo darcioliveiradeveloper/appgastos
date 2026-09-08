@@ -29,7 +29,7 @@ export default function Login() {
     } catch (err) { setMsg(err.response?.data?.msg || err.message); }
   };
   return (
-    <div className="min-h-screen -m-4 flex items-center justify-center bg-gradient-to-b from-[#3b0764] via-[#7c3aed] to-[#c084fc] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#3b0764] via-[#7c3aed] to-[#c084fc] p-4 w-full overflow-hidden">
       <div className="w-full max-w-sm bg-white rounded-[1.5rem] shadow-2xl overflow-hidden">
         <div className="bg-gradient-to-br from-[#4c1d95] via-[#7c3aed] to-[#a78bfa] p-6 text-white text-center rounded-t-[1.5rem]">
           <h1 className="text-2xl font-extrabold">AppGastos</h1>

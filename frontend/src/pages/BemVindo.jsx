@@ -27,7 +27,7 @@ export default function BemVindo(){
     );
   }
   return (
-    <div className="space-y-8 -m-4">
+    <div className="space-y-8 w-full overflow-x-hidden">
       {/* Hero */}
       <section className="bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 text-white p-8 md:p-12 rounded-b-[2.5rem] shadow-xl relative">
         <div className="max-w-6xl mx-auto">

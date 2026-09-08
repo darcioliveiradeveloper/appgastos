@@ -16,8 +16,8 @@ export default function Layout({ children }) {
   const isWelcome = location.pathname === '/' || location.pathname === '/login';
   if (isWelcome) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        <main className="p-0">{children}</main>
+      <div className="min-h-screen bg-slate-50 overflow-x-hidden">
+        <main className="p-0 w-full overflow-x-hidden">{children}</main>
       </div>
     );
   }
