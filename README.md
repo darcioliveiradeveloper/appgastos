@@ -1,56 +1,40 @@
-# Gastos - Controle Financeiro Pessoal
+# AppGastos - Controle Financeiro Pessoal v1.1.0
 
 Monorepo **Backend + Frontend PWA + App Expo** — Node, Express, MongoDB Atlas, React, Vite, Tailwind, Recharts. **100% offline-first** com cópia local + nuvem.
+
+**Deploy:** Backend `https://gastos-backend-kdfi.onrender.com` | Frontend `https://appgastos-gamma.vercel.app/` | Repo `https://github.com/darcioliveiradeveloper/appgastos`
 
 ## Estrutura
 ```
 Gastos/
-├── backend/   # API Express + Mongoose (Atlas com fallback mock)
+├── backend/   # API Express + Mongoose (Atlas)
 ├── frontend/  # Vite + React + PWA offline (IndexedDB queue)
 └── mobile/    # Expo React Native + AsyncStorage offline
 ```
 
 ## Quick Start
-
-### 1. Backend (Atlas já configurado)
 ```bash
-cd backend
-# .env já com MONGO_URI Atlas darcioliveiradeveloper@cluster0.hxe2xzb
-npm run dev # http://localhost:5000/api/health
+cd backend && npm run dev # http://localhost:5000/api/health
+cd frontend && npm run dev # http://localhost:5173
+cd mobile && npx expo start # Expo Go
 ```
 
-### 2. Frontend PWA (instalável, offline)
-```bash
-cd frontend
-npm run dev # http://localhost:5173
-# Celular mesma Wi-Fi: http://SEU_IP:5173 -> Chrome ⋮ > Adicionar à tela inicial
-# Offline: adicione lançamentos sem internet -> fila localStorage -> sync auto ao voltar
-npm run build # gera dist/ com SW + manifest
-```
+## Funcionalidades v1.1.0
+- [x] Auth JWT + Códigos de ativação `APP-XXXX-XXXX` + Master `admin@appgastos.com`
+- [x] Header VendaCerta azul (5 ícones: editar nome, trocar senha, paleta 5 cores, sair, info) + data pill
+- [x] Bem-vindo sem barra, Login estilo VendaCerta com versão, Dashboard padrão max-w-6xl sem scroll
+- [x] Receitas / Despesas / Cartão / Investimentos / Relatórios + Offline + PWA
 
-### 3. Mobile Expo + APK
-```bash
-cd mobile
-npm install # instala @react-native-async-storage/async-storage
-npx expo start # QR no Expo Go
-# Edite App.js:7 API_URL = http://SEU_IP:5000/api (ipconfig) - 10.0.2.2 para emulador
-# Gerar APK:
-npm install -g eas-cli
-eas login
-eas build -p android --profile preview # APK interno compartilhável
-# ou local: npx expo prebuild && eas build --local
-```
-
-## Funcionalidades
-- [x] Etapa 1: Scaffold monorepo + Atlas fix DNS 8.8.8.8
-- [x] Etapa 2: Auth JWT, Transações, Investimentos
-- [x] Etapa 3: Dashboard filtros mês/ano + evolução 6 meses + Relatórios com CSV/JSON/PDF
-- [x] Etapa 4: Offline-first PWA (fila localStorage + sync) + Mobile AsyncStorage + EAS APK
+## Histórico de Versões
+| Versão | Data | Notas |
+|--------|------|-------|
+| **v1.1.0** | Set 2026 | Header azul VendaCerta, paleta 5 cores, editar nome/senha, Welcome/Login sem barra, máscara código, menu padrão |
+| v1.0.0 | Set 2026 | Lançamento: scaffold, Atlas, JWT, Dashboard, Relatórios CSV/JSON, offline, APK |
 
 ## Armazenamento
 - **Nuvem:** MongoDB Atlas `cluster0.hxe2xzb.mongodb.net/gastos`
-- **Local:** PWA `localStorage` queue + cache + Mobile `AsyncStorage` + workbox `NetworkFirst`
-- **Backup:** Relatórios > Exportar JSON (restauração) / CSV (Excel) / Imprimir PDF
+- **Local:** PWA `localStorage` + Mobile `AsyncStorage` + Workbox
+- **Master:** `admin@appgastos.com` / `admin123` → gera códigos em 👑 Master
 
-## Gráficos
-- Recharts: Pizza por categoria, Barra receita vs despesa, Linha evolução 6 meses
+## Deploy
+- Render: `render.yaml` Root `backend` | Vercel: Root `frontend` `VITE_API_URL=https://gastos-backend-kdfi.onrender.com/api`

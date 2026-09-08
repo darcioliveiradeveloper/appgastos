@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
-const VERSAO = 'v1.0.0';
+const VERSAO = 'v1.1.0';
 
 export default function HeaderApp(){
   const nav = useNavigate();
@@ -92,9 +92,10 @@ export default function HeaderApp(){
             <h3 className="font-bold">AppGastos — {VERSAO}</h3>
             <p className="text-sm text-slate-500 mt-2">Controle financeiro pessoal com PWA offline, Dashboard, Receitas, Despesas, Cartão, Investimentos e Relatórios.</p>
             <p className="text-sm text-slate-600 mt-3"><b>Desenvolvido por</b><br/>Darci Oliveira</p>
-            <div className="mt-4 border-t pt-3">
+            <div className="mt-4 border-t pt-3 space-y-2">
               <p className="font-bold text-sm">Histórico</p>
-              <p className="text-xs text-purple-700 font-bold mt-2">v1.0.0 — Set 2026</p><p className="text-xs text-slate-500">Lançamento AppGastos com login, códigos, Dashboard, offline, PWA.</p>
+              <p className="text-xs text-purple-700 font-bold">v1.1.0 — Set 2026</p><p className="text-xs text-slate-500">Header VendaCerta azul, 5 ícones, paleta 5 cores, editar nome, trocar senha, data pill, menu padrão, Welcome sem barra, Login VendaCerta com máscara APP-XXXX-XXXX.</p>
+              <p className="text-xs text-purple-700 font-bold">v1.0.0 — Set 2026</p><p className="text-xs text-slate-500">Lançamento AppGastos com login, códigos, Dashboard, offline, PWA.</p>
             </div>
             <button onClick={()=>setShowInfo(false)} className="w-full bg-[var(--c2)] text-white p-3 rounded-xl font-bold mt-4">Fechar</button>
           </div>
