@@ -7,6 +7,7 @@ import transacoesRoutes from './routes/transacoes.js';
 import investimentosRoutes from './routes/investimentos.js';
 import adminRoutes from './routes/admin.js';
 import cartoesRoutes from './routes/cartoes.js';
+import meRoutes from './routes/me.js';
 import { seedAdmin } from './config/seedAdmin.js';
 
 dotenv.config();
@@ -31,6 +32,7 @@ await seedAdmin();
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date() }));
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/me', meRoutes);
 app.use('/api/transacoes', transacoesRoutes);
 app.use('/api/investimentos', investimentosRoutes);
 app.use('/api/cartoes', cartoesRoutes);

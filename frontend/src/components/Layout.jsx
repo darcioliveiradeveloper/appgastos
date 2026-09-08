@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import OfflineIndicator from './OfflineIndicator';
+import HeaderApp from './HeaderApp';
 
 export default function Layout({ children }) {
   const navigate = useNavigate();
@@ -10,8 +11,12 @@ export default function Layout({ children }) {
   const logado = !!localStorage.getItem('token');
   const user = (()=>{ try{ return JSON.parse(localStorage.getItem('user')||'null'); }catch{ return null; }})();
   const isActive = (path) => location.pathname === path ? 'bg-white text-indigo-600 shadow' : 'hover:bg-white/20';
+  const isActiveSec = (path) => location.pathname === path ? 'bg-[var(--c2)] text-white shadow' : 'hover:bg-slate-100 text-slate-700';
   const MenuLink = ({to, children}) => (
     <Link to={to} onClick={()=>setOpen(false)} className={`px-3 py-2 rounded-xl text-sm font-semibold transition ${isActive(to)}`}>{children}</Link>
+  );
+  const SecLink = ({to, children}) => (
+    <Link to={to} onClick={()=>setOpen(false)} className={`px-3 py-2 rounded-xl text-sm font-semibold transition ${isActiveSec(to)}`}>{children}</Link>
   );
   const isWelcome = location.pathname === '/' || location.pathname === '/login';
   if (isWelcome) {
@@ -21,48 +26,56 @@ export default function Layout({ children }) {
       </div>
     );
   }
+  // Header VendaCerta para logados
+  if (logado) {
+    return (
+      <div className="min-h-screen overflow-x-hidden" style={{background:'var(--card-bg)'}}>
+        <HeaderApp />
+        {/* Navegação secundária AppGastos abaixo do header */}
+        <div className="max-w-6xl mx-auto px-4 -mt-6 relative z-10">
+          <div className="bg-white rounded-2xl shadow border p-2 flex flex-wrap gap-1 justify-center">
+            <SecLink to="/dashboard">📊 Dashboard</SecLink>
+            <SecLink to="/receitas">💚 Receitas</SecLink>
+            <SecLink to="/despesas">🔴 Despesas</SecLink>
+            <SecLink to="/cartao">💳 Cartão</SecLink>
+            <SecLink to="/investimentos">📈 Invest</SecLink>
+            <SecLink to="/relatorios">📑 Relatórios</SecLink>
+            {user?.role==='admin' && <Link to="/admin" onClick={()=>setOpen(false)} className={`px-3 py-2 rounded-xl text-sm font-bold ${isActiveSec('/admin')}`}>👑 Master</Link>}
+          </div>
+          <div className="hidden lg:block text-center mt-2">
+            <OfflineIndicator />
+          </div>
+        </div>
+        <div className="max-w-6xl mx-auto p-4 space-y-3 w-full overflow-hidden">
+          <div className="lg:hidden"><OfflineIndicator /></div>
+          <main>{children}</main>
+        </div>
+        {/* Mobile menu overlay */}
+        {open && (
+          <div className="lg:hidden fixed inset-0 bg-black/40 z-40" onClick={()=>setOpen(false)}>
+            <div className="bg-white m-4 rounded-2xl p-4 space-y-1" onClick={e=>e.stopPropagation()}>
+              <SecLink to="/dashboard">📊 Dashboard</SecLink>
+              <SecLink to="/receitas">💚 Receitas</SecLink>
+              <SecLink to="/despesas">🔴 Despesas</SecLink>
+              <SecLink to="/cartao">💳 Cartão</SecLink>
+              <SecLink to="/investimentos">📈 Investimentos</SecLink>
+              <SecLink to="/relatorios">📑 Relatórios</SecLink>
+              {user?.role==='admin' && <Link to="/admin" onClick={()=>setOpen(false)} className={`block px-3 py-2 rounded-xl font-bold ${isActiveSec('/admin')}`}>👑 Master</Link>}
+              <button onClick={logout} className="w-full bg-red-500 text-white px-3 py-2 rounded-xl font-bold">Sair</button>
+            </div>
+          </div>
+        )}
+        <button onClick={()=>setOpen(!open)} className="lg:hidden fixed bottom-4 right-4 bg-[var(--c2)] text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-xl z-30">{open?'✕':'☰'}</button>
+      </div>
+    )
+  }
   return (
     <div className="min-h-screen bg-slate-50 overflow-x-hidden">
       <nav className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white sticky top-0 z-50 shadow-lg">
         <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-          <Link to="/dashboard" className="font-extrabold text-xl tracking-tight flex items-center gap-2">💰 AppGastos</Link>
-          {/* Desktop */}
-          <div className="hidden lg:flex gap-1 items-center">
-            {logado ? <>
-              <MenuLink to="/dashboard">📊 Dashboard</MenuLink>
-              <MenuLink to="/receitas">💚 Receitas</MenuLink>
-              <MenuLink to="/despesas">🔴 Despesas</MenuLink>
-              <MenuLink to="/cartao">💳 Cartão</MenuLink>
-              <MenuLink to="/investimentos">📈 Investimentos</MenuLink>
-              <MenuLink to="/relatorios">📑 Relatórios</MenuLink>
-              {user?.role==='admin' && <Link to="/admin" onClick={()=>setOpen(false)} className="bg-yellow-300 text-indigo-700 px-3 py-2 rounded-xl text-sm font-extrabold">👑 Master</Link>}
-              <button onClick={logout} className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl text-sm font-bold ml-2">Sair</button>
-            </> : <>
-              <Link to="/" className={`px-3 py-2 rounded-xl text-sm font-semibold ${isActive('/')}`}>Início</Link>
-              <Link to="/login" className="bg-white text-indigo-600 px-5 py-2 rounded-xl font-bold shadow">Entrar</Link>
-            </>}
-          </div>
-          {/* Mobile hamburger */}
-          <button onClick={()=>setOpen(!open)} className="lg:hidden bg-white/20 p-2 rounded-xl">{open?'✕':'☰'}</button>
+          <Link to="/" className="font-extrabold text-xl tracking-tight flex items-center gap-2">💰 AppGastos</Link>
+          <Link to="/login" className="bg-white text-indigo-600 px-5 py-2 rounded-xl font-bold shadow">Entrar</Link>
         </div>
-        {/* Mobile menu */}
-        {open && (
-          <div className="lg:hidden px-4 pb-4 space-y-1 bg-indigo-700/50 backdrop-blur">
-            {logado ? <>
-              <MenuLink to="/dashboard">📊 Dashboard</MenuLink>
-              <MenuLink to="/receitas">💚 Receitas</MenuLink>
-              <MenuLink to="/despesas">🔴 Despesas</MenuLink>
-              <MenuLink to="/cartao">💳 Cartão</MenuLink>
-              <MenuLink to="/investimentos">📈 Investimentos</MenuLink>
-              <MenuLink to="/relatorios">📑 Relatórios</MenuLink>
-              {user?.role==='admin' && <Link to="/admin" onClick={()=>setOpen(false)} className="block bg-yellow-300 text-indigo-700 px-3 py-2 rounded-xl font-bold">👑 Master</Link>}
-              <button onClick={logout} className="w-full text-left bg-red-500 px-3 py-2 rounded-xl font-bold">Sair</button>
-            </> : <>
-              <Link to="/" onClick={()=>setOpen(false)} className="block px-3 py-2">Início</Link>
-              <Link to="/login" onClick={()=>setOpen(false)} className="block bg-white text-indigo-600 px-3 py-2 rounded-xl font-bold">Entrar</Link>
-            </>}
-          </div>
-        )}
       </nav>
       <div className="max-w-6xl mx-auto p-4 space-y-3 w-full overflow-hidden">
         <OfflineIndicator />
