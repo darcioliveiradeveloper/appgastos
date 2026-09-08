@@ -36,12 +36,12 @@ export default function BemVindo(){
               <h1 className="text-4xl md:text-5xl font-extrabold leading-tight">Bem-vindo ao <span className="text-yellow-200">AppGastos</span></h1>
               <p className="text-indigo-100 mt-3 text-lg">Seu controle financeiro pessoal, rápido e offline. Gastos, receitas, cartão e investimentos em um só lugar — no notebook e no celular.</p>
             </div>
-            <div className="w-64 h-64 bg-white rounded-[2rem] shadow-2xl p-6 hidden md:flex flex-col justify-between">
+            <div className="w-full md:w-64 md:h-64 bg-white rounded-[2rem] shadow-2xl p-6 flex flex-col justify-between text-slate-800 mt-6 md:mt-0">
               <div>
-                <p className="text-slate-400 text-xs">Saldo do mês</p><p className="text-2xl font-extrabold text-indigo-600">R$ 2.100,00</p>
+                <p className="text-slate-500 text-xs">Saldo do mês</p><p className="text-2xl font-extrabold text-indigo-600">R$ 2.100,00</p>
                 <div className="flex gap-2 mt-3 text-xs"><span className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">Receitas 5.200</span><span className="bg-red-100 text-red-700 px-2 py-1 rounded-full">Despesas 3.100</span></div>
               </div>
-              <div className="space-y-2 text-xs">
+              <div className="space-y-2 text-xs text-slate-700">
                 <div className="flex justify-between bg-slate-50 p-2 rounded-lg"><span>🍔 Alimentação</span><b>R$ 800</b></div>
                 <div className="flex justify-between bg-slate-50 p-2 rounded-lg"><span>🚗 Transporte</span><b>R$ 400</b></div>
                 <div className="flex justify-between bg-slate-50 p-2 rounded-lg"><span>🏠 Moradia</span><b>R$ 1.200</b></div>
