@@ -64,7 +64,11 @@ export default function Login() {
               </div>
             )}
             {msg && <p className="bg-red-50 text-red-600 text-sm p-3 rounded-xl border border-red-200">{msg}</p>}
-            <button className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white px-6 py-3 rounded-xl font-bold shadow">Entrar</button>
+            <div className="flex gap-2">
+              <button className="flex-1 bg-[#7c3aed] hover:bg-[#6d28d9] text-white px-6 py-3 rounded-xl font-bold shadow">Entrar</button>
+              <button type="button" onClick={()=>nav('/')} className="px-6 py-3 rounded-xl font-bold border border-slate-300 text-slate-600 hover:bg-slate-50">Voltar</button>
+              <button type="button" onClick={()=>{ try{ window.close(); }catch{}; setTimeout(()=>{ if(!window.closed) window.location.href='about:blank'; },300); }} className="px-6 py-3 rounded-xl font-bold border border-red-200 text-red-600 hover:bg-red-50">Sair</button>
+            </div>
           </form>
         </div>
       </div>

@@ -13,7 +13,7 @@ export default function Layout({ children }) {
   const MenuLink = ({to, children}) => (
     <Link to={to} onClick={()=>setOpen(false)} className={`px-3 py-2 rounded-xl text-sm font-semibold transition ${isActive(to)}`}>{children}</Link>
   );
-  const isWelcome = location.pathname === '/';
+  const isWelcome = location.pathname === '/' || location.pathname === '/login';
   if (isWelcome) {
     return (
       <div className="min-h-screen bg-slate-50">
