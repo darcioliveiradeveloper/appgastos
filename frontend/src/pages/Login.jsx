@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+
+const VERSAO = 'v1.0.0';
 
 export default function Login() {
   const [email, setEmail] = useState(''); const [senha, setSenha] = useState(''); const [isRegister, setIsRegister] = useState(false);
@@ -14,39 +16,47 @@ export default function Login() {
       const { data } = await api.post(url, body);
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      // redireciona admin para painel
       if (data.user?.role === 'admin') nav('/admin'); else nav('/dashboard');
     } catch (err) { setMsg(err.response?.data?.msg || err.message); }
   };
   return (
-    <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-700 -m-4 p-4 rounded-2xl">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white text-center">
-          <div className="w-16 h-16 bg-white rounded-2xl mx-auto flex items-center justify-center text-2xl mb-3 shadow">💰</div>
+    <div className="min-h-screen -m-4 flex items-center justify-center bg-gradient-to-b from-[#3b0764] via-[#7c3aed] to-[#c084fc] p-4">
+      <div className="w-full max-w-sm bg-white rounded-[1.5rem] shadow-2xl overflow-hidden">
+        <div className="bg-gradient-to-br from-[#4c1d95] via-[#7c3aed] to-[#a78bfa] p-6 text-white text-center rounded-t-[1.5rem]">
           <h1 className="text-2xl font-extrabold">AppGastos</h1>
-          <p className="text-indigo-100 text-sm">Finanças pessoais com controle total</p>
+          <p className="text-purple-100 text-sm mt-1">Controle Financeiro Pessoal</p>
+          <p className="text-purple-200 text-xs mt-1">{VERSAO}</p>
         </div>
         <div className="p-6">
-          <div className="flex bg-slate-100 rounded-lg p-1 mb-4">
-            <button onClick={()=>setIsRegister(false)} className={`flex-1 py-2 rounded-md text-sm font-semibold ${!isRegister?'bg-white shadow text-indigo-600':'text-slate-500'}`}>Entrar</button>
-            <button onClick={()=>setIsRegister(true)} className={`flex-1 py-2 rounded-md text-sm font-semibold ${isRegister?'bg-white shadow text-indigo-600':'text-slate-500'}`}>Criar conta</button>
+          <div className="flex bg-slate-100 rounded-xl p-1 mb-5">
+            <button type="button" onClick={()=>setIsRegister(false)} className={`flex-1 py-2 rounded-lg text-sm font-bold ${!isRegister?'bg-white shadow text-purple-700':'text-slate-500'}`}>Entrar</button>
+            <button type="button" onClick={()=>setIsRegister(true)} className={`flex-1 py-2 rounded-lg text-sm font-bold ${isRegister?'bg-white shadow text-purple-700':'text-slate-500'}`}>Criar conta</button>
           </div>
-          <form onSubmit={submit} className="space-y-3">
-            {isRegister && <input className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Nome completo" value={nome} onChange={e=>setNome(e.target.value)} required/>}
-            <input className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} required/>
-            <input className="w-full border p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Senha" type="password" value={senha} onChange={e=>setSenha(e.target.value)} required/>
+          <form onSubmit={submit} className="space-y-4">
             {isRegister && (
               <div>
-                <input className="w-full border-2 border-amber-300 p-3 rounded-xl focus:ring-2 focus:ring-amber-400 outline-none bg-amber-50" placeholder="Código de ativação (ex: APP-XXXX-XXXX)" value={codigo} onChange={e=>setCodigo(e.target.value.toUpperCase())} required/>
-                <p className="text-xs text-slate-500 mt-1">🔑 Código fornecido pelo suporte</p>
+                <label className="text-sm text-slate-600">Nome</label>
+                <input className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl mt-1 focus:outline-none focus:border-purple-500" placeholder="Seu nome" value={nome} onChange={e=>setNome(e.target.value)} required/>
+              </div>
+            )}
+            <div>
+              <label className="text-sm text-slate-600">E-mail</label>
+              <input className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl mt-1 focus:outline-none focus:border-purple-500" placeholder="seu@email.com" value={email} onChange={e=>setEmail(e.target.value)} required/>
+            </div>
+            <div>
+              <label className="text-sm text-slate-600">Senha</label>
+              <input className="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl mt-1 focus:outline-none focus:border-purple-500" placeholder="Sua senha" type="password" value={senha} onChange={e=>setSenha(e.target.value)} required/>
+            </div>
+            {isRegister && (
+              <div>
+                <label className="text-sm text-slate-600">Código de ativação</label>
+                <input className="w-full bg-amber-50 border-2 border-amber-300 p-3 rounded-xl mt-1 focus:outline-none focus:border-amber-500 uppercase" placeholder="APP-XXXX-XXXX" value={codigo} onChange={e=>setCodigo(e.target.value.toUpperCase())} required/>
+                <p className="text-xs text-slate-500 mt-1">Código fornecido pelo suporte</p>
               </div>
             )}
             {msg && <p className="bg-red-50 text-red-600 text-sm p-3 rounded-xl border border-red-200">{msg}</p>}
-            <button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-3 rounded-xl font-bold shadow hover:opacity-90">{isRegister ? 'Ativar e Criar Conta' : 'Entrar no AppGastos'}</button>
+            <button className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white px-6 py-3 rounded-xl font-bold shadow">Entrar</button>
           </form>
-          <div className="text-center mt-4">
-            <Link to="/" className="text-sm text-slate-500 hover:text-indigo-600 underline">← Voltar à tela inicial</Link>
-          </div>
         </div>
       </div>
     </div>
