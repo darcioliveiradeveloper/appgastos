@@ -9,7 +9,7 @@ router.post('/register', async (req, res) => {
   try {
     const { nome, email, senha, codigoAtivacao } = req.body;
     // código obrigatório exceto para seeds já existentes (admins legados)
-    const bypassEmails = ['admin@teste.com', 'admin@drso.com'];
+    const bypassEmails = ['admin@appgastos.com'];
     if (!bypassEmails.includes(email)) {
       if (!codigoAtivacao) return res.status(400).json({ msg: 'Código de ativação obrigatório' });
       const doc = await Codigo.findOne({ codigo: codigoAtivacao.toUpperCase().trim() });
