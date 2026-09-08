@@ -32,7 +32,7 @@ export default function Layout({ children }) {
       <div className="min-h-screen overflow-x-hidden" style={{background:'var(--card-bg)'}}>
         <HeaderApp />
         {/* Navegação secundária AppGastos abaixo do header */}
-        <div className="max-w-6xl mx-auto px-4 -mt-2 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 mt-2 relative z-10">
           <div className="bg-white rounded-2xl shadow border p-2 flex flex-wrap gap-1 justify-center">
             <SecLink to="/dashboard">📊 Dashboard</SecLink>
             <SecLink to="/receitas">💚 Receitas</SecLink>
