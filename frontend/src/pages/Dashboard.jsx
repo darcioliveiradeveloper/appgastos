@@ -28,6 +28,7 @@ export default function Dashboard() {
 
   useEffect(() => { carregar(); }, []);
 
+  const [periodo, setPeriodo] = useState('6');
   const anos = [hoje.getFullYear()-2, hoje.getFullYear()-1, hoje.getFullYear(), hoje.getFullYear()+1];
 
   if (loading) return <p>Carregando...</p>;
@@ -56,13 +57,24 @@ export default function Dashboard() {
         <KpiCard titulo="Saldo do período" valor={data.saldo} cor={data.saldo >= 0 ? 'text-emerald-600' : 'text-red-600'} bg={data.saldo>=0?'bg-emerald-50':'bg-red-50'} />
       </Grid>
 
-      {/* Evolução 6 meses */}
+      {/* Evolução */}
       {data.evolucao?.length > 0 && (
         <CardPadrao>
-          <TituloCard>Evolução últimos 6 meses</TituloCard>
+          <div className="flex justify-between items-center mb-3">
+            <TituloCard>Evolução</TituloCard>
+            <select value={periodo} onChange={e=>setPeriodo(e.target.value)} className="border border-slate-200 p-2 rounded-xl text-sm">
+              <option value="atual">Mês atual</option>
+              <option value="3">3 meses</option>
+              <option value="6">6 meses</option>
+              <option value="12">Ano</option>
+            </select>
+          </div>
           <div className="w-full overflow-hidden">
             <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={data.evolucao}>
+              <LineChart data={(() => {
+                const n = periodo === 'atual' ? 1 : periodo === '3' ? 3 : periodo === '6' ? 6 : 12;
+                return data.evolucao.slice(-n);
+              })()}>
                 <XAxis dataKey="mes" tick={{fontSize:12}} />
                 <YAxis tick={{fontSize:12}} width={60} />
                 <Tooltip />
@@ -83,7 +95,7 @@ export default function Dashboard() {
             <div className="w-full overflow-hidden">
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
-                  <Pie data={data.porCategoria} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} labelLine={false}>
+                  <Pie data={data.porCategoria} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} labelLine={false} label={({percent})=> percent>0.04 ? `${(percent*100).toFixed(0)}%` : ''}>
                     {data.porCategoria.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
                   <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
@@ -107,7 +119,6 @@ export default function Dashboard() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-xs text-slate-500 mt-2">{data.total} lançamentos no período</p>
         </CardPadrao>
       </div>
       <p className="text-sm text-slate-500">💡 Dica: Vá em Relatórios para exportar CSV/PDF e ver detalhes por categoria.</p>

@@ -7,7 +7,7 @@ export default function Lancamentos() {
   const online = useOnline();
   const [lista, setLista] = useState([]);
   const [queueLen, setQueueLen] = useState(getQueue().length);
-  const [form, setForm] = useState({ tipo: 'despesa', categoria: '', descricao: '', valor: '', data: new Date().toISOString().slice(0,10) });
+  const [form, setForm] = useState({ tipo: 'despesa', categoria: '', descricao: '', valor: '', data: new Date().toLocaleDateString('en-CA') });
 
   const carregar = async () => {
     try {
@@ -87,7 +87,7 @@ export default function Lancamentos() {
         <table className="w-full text-sm">
           <thead className="bg-slate-100"><tr><th className="p-2 text-left">Data</th><th className="p-2">Tipo</th><th className="p-2">Categoria</th><th className="p-2">Valor</th><th className="p-2"></th></tr></thead>
           <tbody>{lista.map(t=>(
-            <tr key={t._id || t._offlineId} className={`border-t ${t._offline? 'bg-amber-50':''}`}><td className="p-2">{new Date(t.data).toLocaleDateString()} {t._offline && '⏳'}</td><td className="p-2 capitalize">{t.tipo}</td><td className="p-2">{t.categoria}</td><td className={`p-2 font-bold ${t.tipo==='receita'?'text-emerald-600':'text-red-600'}`}>R$ {Number(t.valor).toFixed(2)}</td><td className="p-2"><button onClick={()=>remover(t._id||t._offlineId, !!t._offline)} className="text-red-600">excluir</button></td></tr>
+            <tr key={t._id || t._offlineId} className={`border-t ${t._offline? 'bg-amber-50':''}`}><td className="p-2">{new Date(t.data).toLocaleDateString('pt-BR', {timeZone:'UTC'})} {t._offline && '⏳'}</td><td className="p-2 capitalize">{t.tipo}</td><td className="p-2">{t.categoria}</td><td className={`p-2 font-bold ${t.tipo==='receita'?'text-emerald-600':'text-red-600'}`}>R$ {Number(t.valor).toFixed(2)}</td><td className="p-2"><button onClick={()=>remover(t._id||t._offlineId, !!t._offline)} className="text-red-600">excluir</button></td></tr>
           ))}</tbody>
         </table>
         {lista.length===0 && <p className="p-4 text-slate-500">Nenhum lançamento. {online? 'Faça login e adicione um.': 'Você está offline - adições serão salvas localmente.'}</p>}

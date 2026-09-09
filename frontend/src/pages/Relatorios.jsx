@@ -30,7 +30,7 @@ export default function Relatorios(){
     if (!data?.transacoes?.length) return alert('Nada para exportar');
     const header = ['data','tipo','categoria','descricao','valor','conta'];
     const rows = data.transacoes.map(t=>[
-      new Date(t.data).toLocaleDateString('pt-BR'),
+      new Date(t.data).toLocaleDateString('pt-BR', {timeZone:'UTC'}),
       t.tipo, t.categoria, `"${(t.descricao||'').replace(/"/g,'""')}"`, String(t.valor).replace('.',','), t.conta||''
     ].join(';'));
     const csv = [header.join(';'), ...rows].join('\n');
@@ -109,7 +109,7 @@ export default function Relatorios(){
                 <tbody>
                   {data.transacoes.map(t=> (
                     <tr key={t._id} className="border-t">
-                      <td className="p-3">{new Date(t.data).toLocaleDateString('pt-BR')}</td>
+                      <td className="p-3">{new Date(t.data).toLocaleDateString('pt-BR', {timeZone:'UTC'})}</td>
                       <td className="p-3"><span className={`px-2 py-1 rounded-full text-xs font-bold ${t.tipo==='receita'?'bg-emerald-100 text-emerald-700': t.tipo==='despesa'?'bg-red-100 text-red-700':'bg-blue-100 text-blue-700'}`}>{t.tipo}</span></td>
                       <td className="p-3">{t.categoria}</td>
                       <td className="p-3">{t.descricao||'-'}</td>

@@ -16,8 +16,8 @@ router.get('/', async (req, res) => {
   let filtro = { user: req.userId };
   if (tipo) filtro.tipo = tipo;
   if (mes && ano) {
-    const inicio = new Date(ano, mes - 1, 1);
-    const fim = new Date(ano, mes, 0, 23, 59, 59);
+    const inicio = new Date(Date.UTC(ano, mes - 1, 1, 0, 0, 0));
+    const fim = new Date(Date.UTC(ano, mes, 0, 23, 59, 59, 999));
     filtro.data = { $gte: inicio, $lte: fim };
   }
   const lista = await Transacao.find(filtro).sort({ data: -1 });
@@ -26,8 +26,8 @@ router.get('/', async (req, res) => {
 // resumo para gráficos + evolução 6 meses
 router.get('/resumo', async (req, res) => {
   const { mes, ano } = req.query;
-  const inicio = mes && ano ? new Date(ano, mes - 1, 1) : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  const fim = mes && ano ? new Date(ano, mes, 0, 23, 59, 59) : new Date();
+  const inicio = mes && ano ? new Date(Date.UTC(ano, mes - 1, 1, 0, 0, 0)) : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const fim = mes && ano ? new Date(Date.UTC(ano, mes, 0, 23, 59, 59, 999)) : new Date();
   const transacoes = await Transacao.find({ user: req.userId, data: { $gte: inicio, $lte: fim } });
   const receitas = transacoes.filter(t => t.tipo === 'receita').reduce((s, t) => s + t.valor, 0);
   const despesas = transacoes.filter(t => t.tipo === 'despesa').reduce((s, t) => s + t.valor, 0);
@@ -40,7 +40,7 @@ router.get('/resumo', async (req, res) => {
   for (let i = 5; i >= 0; i--) {
     const d = new Date(); d.setMonth(d.getMonth() - i);
     const m = d.getMonth() + 1; const y = d.getFullYear();
-    const ini = new Date(y, m - 1, 1); const f = new Date(y, m, 0, 23, 59, 59);
+    const ini = new Date(Date.UTC(y, m - 1, 1, 0, 0, 0)); const f = new Date(Date.UTC(y, m, 0, 23, 59, 59, 999));
     const tmes = await Transacao.find({ user: req.userId, data: { $gte: ini, $lte: f } });
     const rec = tmes.filter(t => t.tipo === 'receita').reduce((s, t) => s + t.valor, 0);
     const des = tmes.filter(t => t.tipo === 'despesa').reduce((s, t) => s + t.valor, 0);
@@ -56,7 +56,7 @@ router.get('/relatorio', async (req, res) => {
   if (qInicio && qFim) {
     filtro.data = { $gte: new Date(qInicio), $lte: new Date(qFim) };
   } else if (mes && ano) {
-    const ini = new Date(ano, mes - 1, 1); const f = new Date(ano, mes, 0, 23, 59, 59);
+    const ini = new Date(Date.UTC(ano, mes - 1, 1, 0, 0, 0)); const f = new Date(Date.UTC(ano, mes, 0, 23, 59, 59, 999));
     filtro.data = { $gte: ini, $lte: f };
   }
   const lista = await Transacao.find(filtro).sort({ data: -1 });

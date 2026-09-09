@@ -7,7 +7,7 @@ import { CardPadrao, TituloCard, TituloPagina } from '../components/ui/CardPadra
 export default function Receitas(){
   const online = useOnline();
   const [lista,setLista]=useState([]);
-  const [form,setForm]=useState({ categoria:'', descricao:'', valor:'', data: new Date().toISOString().slice(0,10) });
+  const [form,setForm]=useState({ categoria:'', descricao:'', valor:'', data: new Date().toLocaleDateString('en-CA') });
   const carregar = async ()=>{
     try{ const r=await api.get('/transacoes?tipo=receita'); setLista(r.data); cacheTransacoes(r.data); } catch{
       const c=getCachedTransacoes(); if(c) setLista(c.filter(x=>x.tipo==='receita'));
@@ -44,7 +44,7 @@ export default function Receitas(){
         <TituloCard>Lista de receitas</TituloCard>
         <div className="overflow-auto w-full">
           <table className="w-full text-sm"><thead className="bg-emerald-50"><tr><th className="p-3 text-left">Data</th><th className="p-3">Categoria</th><th className="p-3">Descrição</th><th className="p-3 text-right">Valor</th></tr></thead>
-          <tbody>{lista.map(t=><tr key={t._id} className="border-t"><td className="p-3">{new Date(t.data).toLocaleDateString()} {t._offline?'⏳':''}</td><td className="p-3">{t.categoria}</td><td className="p-3">{t.descricao||'-'}</td><td className="p-3 text-right font-bold text-emerald-600">R$ {Number(t.valor).toFixed(2)}</td></tr>)}</tbody></table>
+          <tbody>{lista.map(t=><tr key={t._id} className="border-t"><td className="p-3">{new Date(t.data).toLocaleDateString('pt-BR', {timeZone:'UTC'})} {t._offline?'⏳':''}</td><td className="p-3">{t.categoria}</td><td className="p-3">{t.descricao||'-'}</td><td className="p-3 text-right font-bold text-emerald-600">R$ {Number(t.valor).toFixed(2)}</td></tr>)}</tbody></table>
           {lista.length===0 && <p className="p-4 text-slate-500">Nenhuma receita. Adicione acima.</p>}
         </div>
       </CardPadrao>
