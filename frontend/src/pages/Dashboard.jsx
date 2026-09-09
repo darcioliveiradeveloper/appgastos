@@ -35,8 +35,8 @@ export default function Dashboard() {
   if (!data) return null;
 
   return (
-    <div className="space-y-6 w-full max-w-6xl mx-auto overflow-hidden">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+    <div className="space-y-2 w-full max-w-6xl mx-auto overflow-hidden">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-1">
         <TituloPagina subtitulo="Visão geral do mês">Dashboard</TituloPagina>
         <div className="flex flex-wrap gap-2 items-center bg-white p-2 rounded-2xl shadow border border-slate-100 w-full md:w-auto">
           <select value={mes} onChange={e=>setMes(e.target.value)} className="border border-slate-200 p-2 rounded-xl flex-1 md:flex-none">
@@ -76,7 +76,7 @@ export default function Dashboard() {
         </CardPadrao>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full">
         <CardPadrao>
           <TituloCard>Despesas por Categoria ({mes}/{ano})</TituloCard>
           {data.porCategoria?.length ? (
