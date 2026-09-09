@@ -57,41 +57,6 @@ export default function Dashboard() {
         <KpiCard titulo={`Saldo ${mes}/${ano}`} valor={data.saldo} cor={data.saldo >= 0 ? 'text-emerald-600' : 'text-red-600'} bg={data.saldo>=0?'bg-emerald-50':'bg-red-50'} />
       </Grid>
 
-      {/* Evolução */}
-      {data.evolucao?.length > 0 && (
-        <CardPadrao>
-          <div className="flex justify-between items-center mb-3">
-            <TituloCard>Evolução</TituloCard>
-            <select value={periodo} onChange={e=>setPeriodo(e.target.value)} className="border border-slate-200 p-2 rounded-xl text-sm">
-              <option value="atual">Mês atual</option>
-              <option value="3">3 meses</option>
-              <option value="6">6 meses</option>
-              <option value="12">Ano</option>
-            </select>
-          </div>
-          <div className="w-full overflow-hidden">
-            <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={(() => {
-                const n = periodo === 'atual' ? 1 : periodo === '3' ? 3 : periodo === '6' ? 6 : 12;
-                let ev = data.evolucao.slice(-n);
-                const first = ev.findIndex(e=> e.receitas!==0 || e.despesas!==0);
-                if (first>0) ev = ev.slice(first);
-                if (ev.length===0) ev = data.evolucao.slice(-1);
-                return ev;
-              })()}>
-                <XAxis dataKey="mes" tick={{fontSize:12}} />
-                <YAxis tick={{fontSize:12}} width={60} />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="receitas" stroke="#10b981" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="despesas" stroke="#ef4444" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="saldo" stroke="#4f46e5" strokeWidth={2} strokeDasharray="5 5" dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </CardPadrao>
-      )}
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full">
         <CardPadrao>
           <TituloCard>Receitas por Categoria ({mes}/{ano})</TituloCard>
@@ -113,8 +78,6 @@ export default function Dashboard() {
                   }}>
                     {data.porCategoriaReceita.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
-                  <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
-                  <Legend wrapperStyle={{fontSize:12}} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -140,8 +103,6 @@ export default function Dashboard() {
                   }}>
                     {data.porCategoria.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
-                  <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
-                  <Legend wrapperStyle={{fontSize:12}} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -155,21 +116,51 @@ export default function Dashboard() {
             <BarChart data={[{ receitas: data.receitas, despesas: data.despesas, saldo: data.saldo }]} barCategoryGap="30%">
               <XAxis hide />
               <YAxis tick={{fontSize:12}} width={60} />
-              <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
-              <Legend />
-              <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]} barSize={40}>
+              <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]} barSize={60}>
                 <LabelList dataKey="receitas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
               </Bar>
-              <Bar dataKey="despesas" fill="#ef4444" name="Despesas" radius={[8,8,0,0]} barSize={40}>
+              <Bar dataKey="despesas" fill="#ef4444" name="Despesas" radius={[8,8,0,0]} barSize={60}>
                 <LabelList dataKey="despesas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
               </Bar>
-              <Bar dataKey="saldo" fill="#4f46e5" name="Saldo" radius={[8,8,0,0]} barSize={40}>
+              <Bar dataKey="saldo" fill="#4f46e5" name="Saldo" radius={[8,8,0,0]} barSize={60}>
                 <LabelList dataKey="saldo" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v!==0? `R$ ${Number(v).toFixed(0)}` : ''} />
               </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
       </CardPadrao>
+      {/* Evolução por último */}
+      {data.evolucao?.length > 0 && (
+        <CardPadrao>
+          <div className="flex justify-between items-center mb-3">
+            <TituloCard>Evolução</TituloCard>
+            <select value={periodo} onChange={e=>setPeriodo(e.target.value)} className="border border-slate-200 p-2 rounded-xl text-sm">
+              <option value="atual">Mês atual</option>
+              <option value="3">3 meses</option>
+              <option value="6">6 meses</option>
+              <option value="12">Ano</option>
+            </select>
+          </div>
+          <div className="w-full overflow-hidden">
+            <ResponsiveContainer width="100%" height={260}>
+              <LineChart data={(() => {
+                const n = periodo === 'atual' ? 1 : periodo === '3' ? 3 : periodo === '6' ? 6 : 12;
+                let ev = data.evolucao.slice(-n);
+                const first = ev.findIndex(e=> e.receitas!==0 || e.despesas!==0);
+                if (first>0) ev = ev.slice(first);
+                if (ev.length===0) ev = data.evolucao.slice(-1);
+                return ev;
+              })()}>
+                <XAxis dataKey="mes" tick={{fontSize:12}} />
+                <YAxis tick={{fontSize:12}} width={60} />
+                <Line type="monotone" dataKey="receitas" stroke="#10b981" strokeWidth={2} dot={{r:5}} label={({x,y,value})=> value ? <text x={x} y={y-10} fill="#10b981" fontSize={11} fontWeight="700" textAnchor="middle">{value}</text> : null} />
+                <Line type="monotone" dataKey="despesas" stroke="#ef4444" strokeWidth={2} dot={{r:5}} label={({x,y,value})=> value ? <text x={x} y={y-10} fill="#ef4444" fontSize={11} fontWeight="700" textAnchor="middle">{value}</text> : null} />
+                <Line type="monotone" dataKey="saldo" stroke="#4f46e5" strokeWidth={2} strokeDasharray="5 5" dot={{r:5}} label={({x,y,value})=> value ? <text x={x} y={y-10} fill="#4f46e5" fontSize={11} fontWeight="700" textAnchor="middle">{value}</text> : null} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardPadrao>
+      )}
       <p className="text-sm text-slate-500">💡 Dica: Vá em Relatórios para exportar CSV/PDF e ver detalhes por categoria.</p>
     </div>
   )
