@@ -54,7 +54,7 @@ export default function Dashboard() {
       <Grid cols={3}>
         <KpiCard titulo={`Receitas ${mes}/${ano}`} valor={data.receitas} cor="text-emerald-600" bg="bg-emerald-50" />
         <KpiCard titulo={`Despesas ${mes}/${ano}`} valor={data.despesas} cor="text-red-600" bg="bg-red-50" />
-        <KpiCard titulo="Saldo do período" valor={data.saldo} cor={data.saldo >= 0 ? 'text-emerald-600' : 'text-red-600'} bg={data.saldo>=0?'bg-emerald-50':'bg-red-50'} />
+        <KpiCard titulo={`Saldo ${mes}/${ano}`} valor={data.saldo} cor={data.saldo >= 0 ? 'text-emerald-600' : 'text-red-600'} bg={data.saldo>=0?'bg-emerald-50':'bg-red-50'} />
       </Grid>
 
       {/* Evolução */}
@@ -94,12 +94,39 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full">
         <CardPadrao>
+          <TituloCard>Receitas por Categoria ({mes}/{ano})</TituloCard>
+          {data.porCategoriaReceita?.length ? (
+            <div className="w-full overflow-hidden">
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie data={data.porCategoriaReceita} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} labelLine={false} label={({ cx, cy, midAngle, outerRadius, percent, index })=>{
+                    const r = outerRadius + 8;
+                    const RAD = Math.PI/180;
+                    const x = cx + r * Math.cos(-midAngle*RAD);
+                    const y = cy + r * Math.sin(-midAngle*RAD);
+                    return percent>0.03 ? (
+                      <g>
+                        <rect x={x-6} y={y-6} width="8" height="8" fill={COLORS[index % COLORS.length]} />
+                        <text x={x+4} y={y} fill="#334155" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" fontSize={11} fontWeight="700">{`${(percent*100).toFixed(0)}%`}</text>
+                      </g>
+                    ) : null;
+                  }}>
+                    {data.porCategoriaReceita.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                  </Pie>
+                  <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
+                  <Legend wrapperStyle={{fontSize:12}} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          ) : <p className="text-slate-500 text-sm">Sem receitas no período.</p>}
+        </CardPadrao>
+        <CardPadrao>
           <TituloCard>Despesas por Categoria ({mes}/{ano})</TituloCard>
           {data.porCategoria?.length ? (
             <div className="w-full overflow-hidden">
-              <ResponsiveContainer width="100%" height={260}>
+              <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
-                  <Pie data={data.porCategoria} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={62} labelLine={false} label={({ cx, cy, midAngle, outerRadius, percent, index })=>{
+                  <Pie data={data.porCategoria} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} labelLine={false} label={({ cx, cy, midAngle, outerRadius, percent, index })=>{
                     const r = outerRadius + 8;
                     const RAD = Math.PI/180;
                     const x = cx + r * Math.cos(-midAngle*RAD);
@@ -120,26 +147,29 @@ export default function Dashboard() {
             </div>
           ) : <p className="text-slate-500 text-sm">Sem despesas no período.</p>}
         </CardPadrao>
-        <CardPadrao>
-          <TituloCard>Receita vs Despesa ({mes}/{ano})</TituloCard>
-          <div className="w-full overflow-hidden">
-            <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={[{ name: `${mes}/${ano}`, receitas: data.receitas, despesas: data.despesas }]} barCategoryGap="30%">
-                <XAxis dataKey="name" tick={{fontSize:12}} />
-                <YAxis tick={{fontSize:12}} width={60} />
-                <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
-                <Legend />
-                <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]}>
-                  <LabelList dataKey="receitas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
-                </Bar>
-                <Bar dataKey="despesas" fill="#ef4444" name="Despesas" radius={[8,8,0,0]}>
-                  <LabelList dataKey="despesas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </CardPadrao>
       </div>
+      <CardPadrao>
+        <TituloCard>Receita vs Despesa vs Saldo ({mes}/{ano})</TituloCard>
+        <div className="w-full overflow-hidden">
+          <ResponsiveContainer width="100%" height={280}>
+            <BarChart data={[{ receitas: data.receitas, despesas: data.despesas, saldo: data.saldo }]} barCategoryGap="30%">
+              <XAxis hide />
+              <YAxis tick={{fontSize:12}} width={60} />
+              <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
+              <Legend />
+              <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]} barSize={40}>
+                <LabelList dataKey="receitas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
+              </Bar>
+              <Bar dataKey="despesas" fill="#ef4444" name="Despesas" radius={[8,8,0,0]} barSize={40}>
+                <LabelList dataKey="despesas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
+              </Bar>
+              <Bar dataKey="saldo" fill="#4f46e5" name="Saldo" radius={[8,8,0,0]} barSize={40}>
+                <LabelList dataKey="saldo" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v!==0? `R$ ${Number(v).toFixed(0)}` : ''} />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </CardPadrao>
       <p className="text-sm text-slate-500">💡 Dica: Vá em Relatórios para exportar CSV/PDF e ver detalhes por categoria.</p>
     </div>
   )

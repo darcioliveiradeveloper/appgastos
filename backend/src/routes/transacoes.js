@@ -35,6 +35,10 @@ router.get('/resumo', async (req, res) => {
     acc[t.categoria] = (acc[t.categoria] || 0) + t.valor;
     return acc;
   }, {})).map(([name, value]) => ({ name, value }));
+  const porCategoriaReceita = Object.entries(transacoes.filter(t => t.tipo === 'receita').reduce((acc, t) => {
+    acc[t.categoria] = (acc[t.categoria] || 0) + t.valor;
+    return acc;
+  }, {})).map(([name, value]) => ({ name, value }));
   // evolução últimos 12 meses (para Ano)
   const evolucao = [];
   for (let i = 11; i >= 0; i--) {
@@ -46,7 +50,7 @@ router.get('/resumo', async (req, res) => {
     const des = tmes.filter(t => t.tipo === 'despesa').reduce((s, t) => s + t.valor, 0);
     evolucao.push({ mes: `${String(m).padStart(2,'0')}/${y}`, receitas: rec, despesas: des, saldo: rec - des });
   }
-  res.json({ receitas, despesas, saldo: receitas - despesas, porCategoria, total: transacoes.length, evolucao });
+  res.json({ receitas, despesas, saldo: receitas - despesas, porCategoria, porCategoriaReceita, total: transacoes.length, evolucao });
 });
 
 // relatório detalhado com agregações
