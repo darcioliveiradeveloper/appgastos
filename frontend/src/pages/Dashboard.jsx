@@ -78,6 +78,7 @@ export default function Dashboard() {
                   }}>
                     {data.porCategoriaReceita.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
+                  <Legend wrapperStyle={{fontSize:12}} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -103,6 +104,7 @@ export default function Dashboard() {
                   }}>
                     {data.porCategoria.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
+                  <Legend wrapperStyle={{fontSize:12}} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -113,9 +115,10 @@ export default function Dashboard() {
         <TituloCard>Receita vs Despesa vs Saldo ({mes}/{ano})</TituloCard>
         <div className="w-full overflow-hidden">
           <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={[{ receitas: data.receitas, despesas: data.despesas, saldo: data.saldo }]} barCategoryGap="30%">
-              <XAxis hide />
+            <BarChart data={[{ name: `${mes}/${ano}`, receitas: data.receitas, despesas: data.despesas, saldo: data.saldo }]} barCategoryGap="30%">
+              <XAxis dataKey="name" tick={{fontSize:12}} />
               <YAxis tick={{fontSize:12}} width={60} />
+              <Legend />
               <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]} barSize={60}>
                 <LabelList dataKey="receitas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
               </Bar>
@@ -153,6 +156,7 @@ export default function Dashboard() {
               })()}>
                 <XAxis dataKey="mes" tick={{fontSize:12}} />
                 <YAxis tick={{fontSize:12}} width={60} />
+                <Legend />
                 <Line type="monotone" dataKey="receitas" stroke="#10b981" strokeWidth={2} dot={{r:5}} label={({x,y,value})=> value ? <text x={x} y={y-10} fill="#10b981" fontSize={11} fontWeight="700" textAnchor="middle">{value}</text> : null} />
                 <Line type="monotone" dataKey="despesas" stroke="#ef4444" strokeWidth={2} dot={{r:5}} label={({x,y,value})=> value ? <text x={x} y={y-10} fill="#ef4444" fontSize={11} fontWeight="700" textAnchor="middle">{value}</text> : null} />
                 <Line type="monotone" dataKey="saldo" stroke="#4f46e5" strokeWidth={2} strokeDasharray="5 5" dot={{r:5}} label={({x,y,value})=> value ? <text x={x} y={y-10} fill="#4f46e5" fontSize={11} fontWeight="700" textAnchor="middle">{value}</text> : null} />
