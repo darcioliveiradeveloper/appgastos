@@ -99,7 +99,18 @@ export default function Dashboard() {
             <div className="w-full overflow-hidden">
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
-                  <Pie data={data.porCategoria} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} labelLine={false} label={({percent})=> percent>0.03 ? `${(percent*100).toFixed(0)}%` : ''}>
+                  <Pie data={data.porCategoria} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={62} labelLine={false} label={({ cx, cy, midAngle, outerRadius, percent, index })=>{
+                    const r = outerRadius + 8;
+                    const RAD = Math.PI/180;
+                    const x = cx + r * Math.cos(-midAngle*RAD);
+                    const y = cy + r * Math.sin(-midAngle*RAD);
+                    return percent>0.03 ? (
+                      <g>
+                        <rect x={x-6} y={y-6} width="8" height="8" fill={COLORS[index % COLORS.length]} />
+                        <text x={x+4} y={y} fill="#334155" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" fontSize={11} fontWeight="700">{`${(percent*100).toFixed(0)}%`}</text>
+                      </g>
+                    ) : null;
+                  }}>
                     {data.porCategoria.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
                   <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
@@ -113,15 +124,16 @@ export default function Dashboard() {
           <TituloCard>Receita vs Despesa ({mes}/{ano})</TituloCard>
           <div className="w-full overflow-hidden">
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={[{ receitas: data.receitas, despesas: data.despesas }]} barCategoryGap="30%">
-                <YAxis hide domain={[0, 'auto']} />
+              <BarChart data={[{ name: `${mes}/${ano}`, receitas: data.receitas, despesas: data.despesas }]} barCategoryGap="30%">
+                <XAxis dataKey="name" tick={{fontSize:12}} />
+                <YAxis tick={{fontSize:12}} width={60} />
                 <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
                 <Legend />
                 <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]}>
-                  <LabelList dataKey="receitas" position="insideBottom" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
+                  <LabelList dataKey="receitas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
                 </Bar>
                 <Bar dataKey="despesas" fill="#ef4444" name="Despesas" radius={[8,8,0,0]}>
-                  <LabelList dataKey="despesas" position="insideBottom" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
+                  <LabelList dataKey="despesas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -134,7 +146,7 @@ export default function Dashboard() {
 }
 function KpiCard({ titulo, valor, cor, bg }) {
   return <div className={`rounded-2xl shadow border border-slate-100 p-5 w-full overflow-hidden ${bg}`}>
-    <p className="text-base font-extrabold text-slate-700 tracking-tight">{titulo}</p>
+    <p className="text-lg font-extrabold text-slate-700 tracking-tight">{titulo}</p>
     <p className={`text-2xl font-extrabold ${cor} mt-1`}>R$ {Number(valor||0).toFixed(2)}</p>
   </div>
 }
