@@ -1,4 +1,4 @@
-# AppGastos - Controle Financeiro Pessoal v1.2.0
+# AppGastos - Controle Financeiro Pessoal v1.3.0
 
 Monorepo **Backend + Frontend PWA + App Expo** — Node, Express, MongoDB Atlas, React, Vite, Tailwind, Recharts. **100% offline-first** com cópia local + nuvem.
 
@@ -19,18 +19,20 @@ cd frontend && npm run dev # http://localhost:5173 -> http://192.168.3.20:5173 n
 cd mobile && npx expo start # Expo Go
 ```
 
-## Funcionalidades v1.2.0
+## Funcionalidades v1.3.0
 - [x] Auth JWT + Códigos `APP-XXXX-XXXX` + Master `admin@appgastos.com` / `admin123`
-- [x] Header VendaCerta azul + 5 ícones (editar nome, trocar senha, paleta 5 cores, sair→/, info v1.2.0) + data pill dentro do header
-- [x] Bem-vindo sem barra, Login sem barra (Entrar+Sair), Dashboard/Receitas/Despesas/Cartão/Invest/Relatórios padronizados `max-w-6xl`, `CardPadrao`, `gap-2`, sem scroll
-- [x] PWA `start_url: /` (abre na Welcome), `theme #1e1b4b` azul, offline + Atlas
+- [x] Header azul VendaCerta + 5 ícones + paleta 5 cores + data pill
+- [x] Dashboard: KPIs com data, 2 pizzas (receitas/despesas) + barra com saldo + evolução com período (mês/3/6/ano) e valores nos pontos
+- [x] Cartão: limites disponíveis (total, próxima fatura, usado, disponível, futuras) + vencimento com placeholder
+- [x] Correção datas UTC (08/09 fix), PWA start_url `/` (Welcome), sem scroll horizontal
 
 ## Histórico de Versões
 | Versão | Data | Notas |
 |--------|------|-------|
-| **v1.2.0** | Set 2026 | Layouts padronizados Dashboard→Relatórios, Welcome/Login sem barra, azul padrão, distância header→menu e entre cards padronizada |
-| v1.1.0 | Set 2026 | Header azul, paleta 5 cores, editar nome/senha, Welcome/Login sem barra, máscara código |
-| v1.0.0 | Set 2026 | Lançamento: scaffold, Atlas, JWT, Dashboard, CSV/JSON, offline, APK |
+| **v1.3.0** | Set 2026 | Fix datas, 2 pizzas, barra com saldo, evolução período, header/data/menu ajustes, Cartão limites |
+| v1.2.0 | Set 2026 | Layouts padronizados, Welcome/Login sem barra, azul padrão |
+| v1.1.0 | Set 2026 | Header azul, paleta 5 cores, editar nome/senha |
+| v1.0.0 | Set 2026 | Lançamento: scaffold, Atlas, JWT, offline, PWA |
 
 ## Armazenamento
 - **Nuvem:** MongoDB Atlas `cluster0.hxe2xzb.mongodb.net/gastos`

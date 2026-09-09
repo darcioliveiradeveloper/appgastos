@@ -115,17 +115,17 @@ export default function Dashboard() {
         <TituloCard>Receita vs Despesa vs Saldo ({mes}/{ano})</TituloCard>
         <div className="w-full overflow-hidden">
           <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={[{ name: `${mes}/${ano}`, receitas: data.receitas, despesas: data.despesas, saldo: data.saldo }]} barCategoryGap="30%">
-              <XAxis dataKey="name" tick={{fontSize:12}} />
+            <BarChart data={[{ receitas: data.receitas, despesas: data.despesas, saldo: data.saldo }]} barCategoryGap="20%">
+              <XAxis hide />
               <YAxis tick={{fontSize:12}} width={60} />
               <Legend />
-              <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]} barSize={60}>
+              <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]} barSize={80}>
                 <LabelList dataKey="receitas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
               </Bar>
-              <Bar dataKey="despesas" fill="#ef4444" name="Despesas" radius={[8,8,0,0]} barSize={60}>
+              <Bar dataKey="despesas" fill="#ef4444" name="Despesas" radius={[8,8,0,0]} barSize={80}>
                 <LabelList dataKey="despesas" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
               </Bar>
-              <Bar dataKey="saldo" fill="#4f46e5" name="Saldo" radius={[8,8,0,0]} barSize={60}>
+              <Bar dataKey="saldo" fill="#4f46e5" name="Saldo" radius={[8,8,0,0]} barSize={80}>
                 <LabelList dataKey="saldo" position="insideTop" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v!==0? `R$ ${Number(v).toFixed(0)}` : ''} />
               </Bar>
             </BarChart>
