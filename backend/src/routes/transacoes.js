@@ -35,9 +35,9 @@ router.get('/resumo', async (req, res) => {
     acc[t.categoria] = (acc[t.categoria] || 0) + t.valor;
     return acc;
   }, {})).map(([name, value]) => ({ name, value }));
-  // evolução últimos 6 meses
+  // evolução últimos 12 meses (para Ano)
   const evolucao = [];
-  for (let i = 5; i >= 0; i--) {
+  for (let i = 11; i >= 0; i--) {
     const d = new Date(); d.setMonth(d.getMonth() - i);
     const m = d.getMonth() + 1; const y = d.getFullYear();
     const ini = new Date(Date.UTC(y, m - 1, 1, 0, 0, 0)); const f = new Date(Date.UTC(y, m, 0, 23, 59, 59, 999));

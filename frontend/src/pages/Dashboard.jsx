@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line } from 'recharts';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, LabelList } from 'recharts';
 import { CardPadrao, TituloCard, TituloPagina, Grid } from '../components/ui/CardPadrao';
 
 const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
@@ -73,7 +73,11 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height={260}>
               <LineChart data={(() => {
                 const n = periodo === 'atual' ? 1 : periodo === '3' ? 3 : periodo === '6' ? 6 : 12;
-                return data.evolucao.slice(-n);
+                let ev = data.evolucao.slice(-n);
+                const first = ev.findIndex(e=> e.receitas!==0 || e.despesas!==0);
+                if (first>0) ev = ev.slice(first);
+                if (ev.length===0) ev = data.evolucao.slice(-1);
+                return ev;
               })()}>
                 <XAxis dataKey="mes" tick={{fontSize:12}} />
                 <YAxis tick={{fontSize:12}} width={60} />
@@ -95,7 +99,7 @@ export default function Dashboard() {
             <div className="w-full overflow-hidden">
               <ResponsiveContainer width="100%" height={260}>
                 <PieChart>
-                  <Pie data={data.porCategoria} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} labelLine={false} label={({percent})=> percent>0.04 ? `${(percent*100).toFixed(0)}%` : ''}>
+                  <Pie data={data.porCategoria} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} labelLine={false} label={({percent})=> percent>0.03 ? `${(percent*100).toFixed(0)}%` : ''}>
                     {data.porCategoria.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
                   <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
@@ -106,16 +110,19 @@ export default function Dashboard() {
           ) : <p className="text-slate-500 text-sm">Sem despesas no período.</p>}
         </CardPadrao>
         <CardPadrao>
-          <TituloCard>Receita vs Despesa</TituloCard>
+          <TituloCard>Receita vs Despesa ({mes}/{ano})</TituloCard>
           <div className="w-full overflow-hidden">
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={[{ name: `${mes}/${ano}`, receitas: data.receitas, despesas: data.despesas }]}>
-                <XAxis dataKey="name" tick={{fontSize:12}} />
-                <YAxis tick={{fontSize:12}} width={60} />
-                <Tooltip />
+              <BarChart data={[{ receitas: data.receitas, despesas: data.despesas }]} barCategoryGap="30%">
+                <YAxis hide domain={[0, 'auto']} />
+                <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
                 <Legend />
-                <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]} />
-                <Bar dataKey="despesas" fill="#ef4444" name="Despesas" radius={[8,8,0,0]} />
+                <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]}>
+                  <LabelList dataKey="receitas" position="insideBottom" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
+                </Bar>
+                <Bar dataKey="despesas" fill="#ef4444" name="Despesas" radius={[8,8,0,0]}>
+                  <LabelList dataKey="despesas" position="insideBottom" fill="#fff" fontSize={12} fontWeight="bold" formatter={v=> v? `R$ ${Number(v).toFixed(0)}` : ''} />
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -127,7 +134,7 @@ export default function Dashboard() {
 }
 function KpiCard({ titulo, valor, cor, bg }) {
   return <div className={`rounded-2xl shadow border border-slate-100 p-5 w-full overflow-hidden ${bg}`}>
-    <p className="text-sm font-extrabold text-slate-600 tracking-tight">{titulo}</p>
+    <p className="text-base font-extrabold text-slate-700 tracking-tight">{titulo}</p>
     <p className={`text-2xl font-extrabold ${cor} mt-1`}>R$ {Number(valor||0).toFixed(2)}</p>
   </div>
 }
