@@ -7,21 +7,32 @@ import { CardPadrao, TituloCard, TituloPagina } from '../components/ui/CardPadra
 export default function Despesas(){
   const online = useOnline();
   const [lista,setLista]=useState([]);
-  const [form,setForm]=useState({ categoria:'', descricao:'', valor:'', data: new Date().toLocaleDateString('en-CA'), conta:'carteira' });
+  const [form,setForm]=useState({ categoria:'', descricao:'', valor:'', data: new Date().toLocaleDateString('en-CA'), periodo:'', conta:'carteira' });
   const carregar = async ()=>{
-    try{ const r=await api.get('/transacoes?tipo=despesa'); setLista(r.data.filter(x=>x.conta==='carteira' || !x.conta)); cacheTransacoes(r.data); } catch{
-      const c=getCachedTransacoes(); if(c) setLista(c.filter(x=>x.tipo==='despesa' && x.conta==='carteira'));
+    try{
+      const r=await api.get('/transacoes?tipo=despesa');
+      const filtrada = r.data.filter(x=>x.conta==='carteira' || !x.conta);
+      const ordenada = [...filtrada].sort((a,b)=> new Date(a.data)-new Date(b.data));
+      setLista(ordenada); cacheTransacoes(ordenada);
+    } catch{
+      const c=getCachedTransacoes(); if(c) { const f=c.filter(x=>x.tipo==='despesa' && x.conta==='carteira').sort((a,b)=> new Date(a.data)-new Date(b.data)); setLista(f); }
       const q=getQueue().filter(x=>x.tipo==='despesa'); if(q.length) setLista(prev=>[...q.map(x=>({...x,_offline:true,_id:x._offlineId})),...prev]);
     }
   };
   useEffect(()=>{carregar();},[]);
   useEffect(()=>{ if(online) syncQueue(api).then(r=>r.synced&&carregar()); },[online]);
+  const [editId,setEditId]=useState(null);
   const salvar=async(e)=>{
     e.preventDefault();
-    const payload={ tipo:'despesa', categoria:form.categoria, descricao:form.descricao, valor:Number(form.valor), data:form.data, conta:'carteira' };
-    try{ await api.post('/transacoes',payload); setForm({...form,categoria:'',descricao:'',valor:''}); carregar(); }
+    const payload={ tipo:'despesa', categoria:form.categoria, descricao:form.descricao, valor:Number(form.valor), data:form.data, periodo: form.periodo || new Date(form.data).toLocaleDateString('pt-BR', {month:'2-digit', year:'2-digit', timeZone:'UTC'}).slice(3), conta:'carteira' };
+    try{
+      if (editId) { await api.delete(`/transacoes/${editId}`); setEditId(null); }
+      await api.post('/transacoes',payload); setForm({ categoria:'', descricao:'', valor:'', data: new Date().toLocaleDateString('en-CA'), periodo:'', conta:'carteira' }); carregar();
+    }
     catch(err){ if(!err.response){ saveToQueue(payload); alert('📴 Offline - despesa salva'); setLista(prev=>[{...payload,_offline:true,_id:Date.now().toString(),data:new Date().toISOString()},...prev]); } else alert(err.response?.data?.msg); }
   };
+  const editar=(t)=>{ setForm({ categoria:t.categoria, descricao:t.descricao||'', valor:String(t.valor), data:new Date(t.data).toISOString().slice(0,10), periodo: t.periodo || new Date(t.data).toLocaleDateString('pt-BR', {month:'2-digit', year:'2-digit', timeZone:'UTC'}).slice(3), conta:'carteira' }); setEditId(t._id); window.scrollTo({top:0,behavior:'smooth'}); };
+  const excluir=async(id)=>{ if(!confirm('Excluir despesa?')) return; try{ await api.delete(`/transacoes/${id}`); carregar(); } catch(e){ alert(e.response?.data?.msg||e.message); } };
   const total = lista.reduce((s,t)=>s+Number(t.valor),0);
   return (
     <div className="space-y-2 w-full max-w-6xl mx-auto overflow-hidden">
@@ -31,20 +42,22 @@ export default function Despesas(){
         <div className="bg-white text-red-600 px-4 py-2 rounded-xl font-extrabold">R$ {total.toFixed(2)}</div>
       </div>
       <CardPadrao>
-        <TituloCard>Nova despesa</TituloCard>
-        <form onSubmit={salvar} className="grid md:grid-cols-5 gap-2">
-          <input placeholder="Categoria (Mercado)" value={form.categoria} onChange={e=>setForm({...form,categoria:e.target.value})} className="border border-slate-200 p-3 rounded-xl" required/>
-          <input placeholder="Descrição" value={form.descricao} onChange={e=>setForm({...form,descricao:e.target.value})} className="border border-slate-200 p-3 rounded-xl"/>
-          <input type="number" step="0.01" placeholder="Valor" value={form.valor} onChange={e=>setForm({...form,valor:e.target.value})} className="border border-slate-200 p-3 rounded-xl" required/>
-          <input type="date" value={form.data} onChange={e=>setForm({...form,data:e.target.value})} className="border border-slate-200 p-3 rounded-xl"/>
-          <button className="bg-red-600 text-white rounded-xl font-bold">+ Adicionar</button>
+        <TituloCard>{editId ? 'Editar despesa' : 'Nova despesa'}</TituloCard>
+        <form onSubmit={salvar} className="grid grid-cols-12 gap-2">
+          <input type="date" value={form.data} onChange={e=>setForm({...form,data:e.target.value})} className="border border-slate-200 p-3 rounded-xl text-sm col-span-2" />
+          <input placeholder="Categoria (Mercado)" value={form.categoria} onChange={e=>setForm({...form,categoria:e.target.value})} className="border border-slate-200 p-3 rounded-xl text-sm col-span-2" required/>
+          <input placeholder="Descrição" value={form.descricao} onChange={e=>setForm({...form,descricao:e.target.value})} className="border border-slate-200 p-3 rounded-xl text-sm col-span-3"/>
+          <input placeholder="Período (09/12)" value={form.periodo} onChange={e=>setForm({...form,periodo:e.target.value})} className="border border-slate-200 p-3 rounded-xl text-sm col-span-2" />
+          <input type="number" step="0.01" placeholder="Valor" value={form.valor} onChange={e=>setForm({...form,valor:e.target.value})} className="border border-slate-200 p-3 rounded-xl text-sm col-span-2" required/>
+          <button className={`${editId?'bg-amber-600':'bg-red-600'} text-white rounded-xl font-bold text-sm col-span-1`}>{editId? 'Salvar' : '+ Adicionar'}</button>
         </form>
+        {editId && <button onClick={()=>{setEditId(null); setForm({ categoria:'', descricao:'', valor:'', data: new Date().toLocaleDateString('en-CA'), periodo:'', conta:'carteira' });}} className="text-sm text-slate-500 mt-2">Cancelar edição</button>}
       </CardPadrao>
       <CardPadrao>
         <TituloCard>Lista de despesas</TituloCard>
         <div className="overflow-auto w-full">
-          <table className="w-full text-sm"><thead className="bg-red-50"><tr><th className="p-3 text-left">Data</th><th className="p-3">Categoria</th><th className="p-3">Descrição</th><th className="p-3 text-right">Valor</th></tr></thead>
-          <tbody>{lista.map(t=><tr key={t._id} className="border-t"><td className="p-3">{new Date(t.data).toLocaleDateString('pt-BR', {timeZone:'UTC'})} {t._offline?'⏳':''}</td><td className="p-3">{t.categoria}</td><td className="p-3">{t.descricao||'-'}</td><td className="p-3 text-right font-bold text-red-600">R$ {Number(t.valor).toFixed(2)}</td></tr>)}</tbody></table>
+          <table className="w-full text-sm table-fixed"><thead className="bg-red-50"><tr><th className="p-2 text-left w-[14%]">Data</th><th className="p-2 text-left w-[18%]">Categoria</th><th className="p-2 text-left">Descrição</th><th className="p-2 text-center w-[12%]">Período</th><th className="p-2 text-center w-[14%]">Valor</th><th className="p-2 text-center w-[14%]">Ações</th></tr></thead>
+          <tbody>{lista.map(t=><tr key={t._id} className="border-t"><td className="p-2 text-left">{new Date(t.data).toLocaleDateString('pt-BR', {timeZone:'UTC'})} {t._offline?'⏳':''}</td><td className="p-2 text-left">{t.categoria}</td><td className="p-2 text-left">{t.descricao||'-'}</td><td className="p-2 text-center text-xs font-medium">{t.periodo || new Date(t.data).toLocaleDateString('pt-BR', {month:'2-digit', year:'numeric', timeZone:'UTC'})}</td><td className="p-2 text-center font-bold text-red-600 whitespace-nowrap">R$ {Number(t.valor).toFixed(2)}</td><td className="p-2"><div className="flex gap-1 justify-center"><button onClick={()=>editar(t)} title="Editar" className="w-7 h-7 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-xs">✏️</button><button onClick={()=>excluir(t._id)} title="Excluir" className="w-7 h-7 bg-red-100 text-red-700 rounded-full flex items-center justify-center text-xs">🗑️</button></div></td></tr>)}</tbody></table>
           {lista.length===0 && <p className="p-4 text-slate-500">Nenhuma despesa.</p>}
         </div>
       </CardPadrao>
