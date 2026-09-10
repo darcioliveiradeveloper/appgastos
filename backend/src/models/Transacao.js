@@ -7,6 +7,7 @@ const transacaoSchema = new mongoose.Schema({
   descricao: { type: String },
   valor: { type: Number, required: true },
   data: { type: Date, default: Date.now },
+  periodo: { type: String }, // ex: 09/12
   conta: { type: String, default: 'carteira' }, // carteira, cartão, etc
   recorrente: { type: Boolean, default: false }
 }, { timestamps: true });
