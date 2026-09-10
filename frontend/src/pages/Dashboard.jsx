@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../services/api';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, LabelList } from 'recharts';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, LineChart, Line, LabelList, CartesianGrid } from 'recharts';
 import { CardPadrao, TituloCard, TituloPagina, Grid } from '../components/ui/CardPadrao';
 
 const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
@@ -59,7 +59,7 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 w-full">
         <CardPadrao>
-          <TituloCard>Receitas por Categoria ({mes}/{ano})</TituloCard>
+          <TituloCard>Receitas {mes}/{ano}</TituloCard>
           {data.porCategoriaReceita?.length ? (
             <div className="w-full overflow-hidden">
               <ResponsiveContainer width="100%" height={280}>
@@ -78,6 +78,7 @@ export default function Dashboard() {
                   }}>
                     {data.porCategoriaReceita.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
+                  <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
                   <Legend wrapperStyle={{fontSize:12}} />
                 </PieChart>
               </ResponsiveContainer>
@@ -85,7 +86,7 @@ export default function Dashboard() {
           ) : <p className="text-slate-500 text-sm">Sem receitas no período.</p>}
         </CardPadrao>
         <CardPadrao>
-          <TituloCard>Despesas por Categoria ({mes}/{ano})</TituloCard>
+          <TituloCard>Despesas {mes}/{ano}</TituloCard>
           {data.porCategoria?.length ? (
             <div className="w-full overflow-hidden">
               <ResponsiveContainer width="100%" height={280}>
@@ -104,6 +105,7 @@ export default function Dashboard() {
                   }}>
                     {data.porCategoria.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                   </Pie>
+                  <Tooltip formatter={v=>`R$ ${Number(v).toFixed(2)}`} />
                   <Legend wrapperStyle={{fontSize:12}} />
                 </PieChart>
               </ResponsiveContainer>
@@ -112,11 +114,12 @@ export default function Dashboard() {
         </CardPadrao>
       </div>
       <CardPadrao>
-        <TituloCard>Receita vs Despesa vs Saldo ({mes}/{ano})</TituloCard>
+        <TituloCard>Receitas x Despesas x Saldo ({mes}/{ano})</TituloCard>
         <div className="w-full overflow-hidden">
           <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={[{ receitas: data.receitas, despesas: data.despesas, saldo: data.saldo }]} barCategoryGap="20%">
-              <XAxis hide />
+            <BarChart data={[{ name: ' ', receitas: data.receitas, despesas: data.despesas, saldo: data.saldo }]} barCategoryGap="20%">
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="name" tick={{fontSize:12}} />
               <YAxis tick={{fontSize:12}} width={60} />
               <Legend />
               <Bar dataKey="receitas" fill="#10b981" name="Receitas" radius={[8,8,0,0]} barSize={80}>
@@ -136,7 +139,7 @@ export default function Dashboard() {
       {data.evolucao?.length > 0 && (
         <CardPadrao>
           <div className="flex justify-between items-center mb-3">
-            <TituloCard>Evolução</TituloCard>
+            <TituloCard>Evolução {periodo==='atual'?'• Mês atual': periodo==='3'?'• 3 meses': periodo==='6'?'• 6 meses':'• Ano'}</TituloCard>
             <select value={periodo} onChange={e=>setPeriodo(e.target.value)} className="border border-slate-200 p-2 rounded-xl text-sm">
               <option value="atual">Mês atual</option>
               <option value="3">3 meses</option>
@@ -148,11 +151,7 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height={260}>
               <LineChart data={(() => {
                 const n = periodo === 'atual' ? 1 : periodo === '3' ? 3 : periodo === '6' ? 6 : 12;
-                let ev = data.evolucao.slice(-n);
-                const first = ev.findIndex(e=> e.receitas!==0 || e.despesas!==0);
-                if (first>0) ev = ev.slice(first);
-                if (ev.length===0) ev = data.evolucao.slice(-1);
-                return ev;
+                return data.evolucao.slice(-n);
               })()}>
                 <XAxis dataKey="mes" tick={{fontSize:12}} />
                 <YAxis tick={{fontSize:12}} width={60} />

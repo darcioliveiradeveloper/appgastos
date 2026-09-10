@@ -1,4 +1,4 @@
-# AppGastos - Controle Financeiro Pessoal v1.3.0
+# AppGastos - Controle Financeiro Pessoal v1.4.0
 
 Monorepo **Backend + Frontend PWA + App Expo** — Node, Express, MongoDB Atlas, React, Vite, Tailwind, Recharts. **100% offline-first** com cópia local + nuvem.
 
@@ -19,17 +19,17 @@ cd frontend && npm run dev # http://localhost:5173 -> http://192.168.3.20:5173 n
 cd mobile && npx expo start # Expo Go
 ```
 
-## Funcionalidades v1.3.0
+## Funcionalidades v1.4.0
 - [x] Auth JWT + Códigos `APP-XXXX-XXXX` + Master `admin@appgastos.com` / `admin123`
 - [x] Header azul VendaCerta + 5 ícones + paleta 5 cores + data pill
-- [x] Dashboard: KPIs com data, 2 pizzas (receitas/despesas) + barra com saldo + evolução com período (mês/3/6/ano) e valores nos pontos
-- [x] Cartão: limites disponíveis (total, próxima fatura, usado, disponível, futuras) + vencimento com placeholder
-- [x] Correção datas UTC (08/09 fix), PWA start_url `/` (Welcome), sem scroll horizontal
+- [x] Dashboard: KPIs com data, 2 pizzas com % e quadrado, barra com saldo (X/Y), evolução com período e valores nos pontos
+- [x] PWA `start_url: /` (Welcome), sem scroll, max-w-6xl padrão
 
 ## Histórico de Versões
 | Versão | Data | Notas |
 |--------|------|-------|
-| **v1.3.0** | Set 2026 | Fix datas, 2 pizzas, barra com saldo, evolução período, header/data/menu ajustes, Cartão limites |
+| **v1.4.0** | Set 2026 | Dashboard títulos, pizzas, barras, evolução, header/menu ajustes |
+| v1.3.0 | Set 2026 | Fix datas, 2 pizzas, barra com saldo, evolução período, Cartão limites |
 | v1.2.0 | Set 2026 | Layouts padronizados, Welcome/Login sem barra, azul padrão |
 | v1.1.0 | Set 2026 | Header azul, paleta 5 cores, editar nome/senha |
 | v1.0.0 | Set 2026 | Lançamento: scaffold, Atlas, JWT, offline, PWA |

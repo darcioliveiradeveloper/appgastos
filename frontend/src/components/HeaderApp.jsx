@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
-const VERSAO = 'v1.3.0';
+const VERSAO = 'v1.4.0';
 
 export default function HeaderApp(){
   const nav = useNavigate();
@@ -94,9 +94,9 @@ export default function HeaderApp(){
             <p className="text-sm text-slate-600 mt-3"><b>Desenvolvido por</b><br/>Darci Oliveira</p>
             <div className="mt-4 border-t pt-3 space-y-2">
               <p className="font-bold text-sm">Histórico</p>
+              <p className="text-xs text-purple-700 font-bold">v1.4.0 — Set 2026</p><p className="text-xs text-slate-500">Dashboard títulos maiores, pizzas com % e quadrado, barras maiores com eixos e valores, evolução com período e valores nos pontos, header azul e menu ajustados.</p>
               <p className="text-xs text-purple-700 font-bold">v1.3.0 — Set 2026</p><p className="text-xs text-slate-500">Fix datas UTC, Dashboard 2 pizzas + barra com saldo, evolução com período e valores nos pontos, header data e menu ajustados, Cartão limites disponíveis.</p>
               <p className="text-xs text-purple-700 font-bold">v1.2.0 — Set 2026</p><p className="text-xs text-slate-500">Layouts padronizados max-w-6xl sem scroll, Dashboard com CardPadrao, Receitas/Despesas/Cartão/Invest/Relatórios no mesmo padrão, Welcome sem barra e Login sem barra.</p>
-              <p className="text-xs text-purple-700 font-bold">v1.1.0 — Set 2026</p><p className="text-xs text-slate-500">Header VendaCerta azul, 5 ícones, paleta 5 cores, editar nome, trocar senha, data pill, menu padrão, Welcome sem barra, Login VendaCerta com máscara APP-XXXX-XXXX.</p>
             </div>
             <button onClick={()=>setShowInfo(false)} className="w-full bg-[var(--c2)] text-white p-3 rounded-xl font-bold mt-4">Fechar</button>
           </div>
