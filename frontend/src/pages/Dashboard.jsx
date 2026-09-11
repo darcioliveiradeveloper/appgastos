@@ -18,6 +18,7 @@ export default function Dashboard() {
     try {
       const r = await api.get(`/transacoes/resumo?mes=${m}&ano=${a}`);
       setData(r.data);
+      try { const c = await api.get('/cartoes'); setCartoes(c.data); } catch {}
     } catch {
       try {
         const r = await api.get('/mock/resumo');
@@ -29,6 +30,7 @@ export default function Dashboard() {
   useEffect(() => { carregar(); }, []);
 
   const [periodo, setPeriodo] = useState('6');
+  const [cartoes, setCartoes] = useState([]);
   const anos = [hoje.getFullYear()-2, hoje.getFullYear()-1, hoje.getFullYear(), hoje.getFullYear()+1];
 
   if (loading) return <p>Carregando...</p>;
@@ -135,6 +137,35 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
       </CardPadrao>
+      {cartoes.length>0 && (
+        <CardPadrao>
+          <TituloCard>Cartões — Fatura vs Disponível vs Futuras</TituloCard>
+          <div className="w-full overflow-hidden">
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={cartoes.map(c=>({ name: c.nome, fatura: c.faturaAtual||0, disponivel: c.limiteDisponivel||0, futuras: c.faturasFuturas||0 }))} barCategoryGap="20%">
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="name" tick={{fontSize:12}} />
+                <YAxis tick={{fontSize:12}} width={60} />
+                <Legend />
+                <Bar dataKey="fatura" fill="#f59e0b" name="Fatura Atual" radius={[8,8,0,0]} barSize={30}>
+                  <LabelList dataKey="fatura" position="insideTop" fill="#fff" fontSize={11} fontWeight="bold" formatter={v=> v ? `R$ ${v}` : ''} />
+                </Bar>
+                <Bar dataKey="disponivel" fill="#10b981" name="Disponível" radius={[8,8,0,0]} barSize={30}>
+                  <LabelList dataKey="disponivel" position="insideTop" fill="#fff" fontSize={11} fontWeight="bold" formatter={v=> v ? `R$ ${v}` : ''} />
+                </Bar>
+                <Bar dataKey="futuras" fill="#ef4444" name="Futuras" radius={[8,8,0,0]} barSize={30}>
+                  <LabelList dataKey="futuras" position="insideTop" fill="#fff" fontSize={11} fontWeight="bold" formatter={v=> v ? `R$ ${v}` : ''} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="grid grid-cols-3 gap-2 mt-3">
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-center"><p className="text-xs font-extrabold text-emerald-700">Faturas</p><p className="font-bold text-emerald-700">R$ {cartoes.reduce((s,c)=>s+(c.faturaAtual||0),0).toFixed(2)}</p></div>
+            <div className="bg-violet-50 border border-violet-200 rounded-xl p-3 text-center"><p className="text-xs font-extrabold text-violet-700">Disponível</p><p className="font-bold text-violet-700">R$ {cartoes.reduce((s,c)=>s+(c.limiteDisponivel||0),0).toFixed(2)}</p></div>
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center"><p className="text-xs font-extrabold text-amber-700">Futuras</p><p className="font-bold text-amber-700">R$ {cartoes.reduce((s,c)=>s+(c.faturasFuturas||0),0).toFixed(2)}</p></div>
+          </div>
+        </CardPadrao>
+      )}
       {/* Evolução por último */}
       {data.evolucao?.length > 0 && (
         <CardPadrao>

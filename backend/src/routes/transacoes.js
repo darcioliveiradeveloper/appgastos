@@ -26,9 +26,8 @@ router.get('/', async (req, res) => {
 // resumo para gráficos + evolução 6 meses
 router.get('/resumo', async (req, res) => {
   const { mes, ano } = req.query;
-  const inicio = mes && ano ? new Date(Date.UTC(ano, mes - 1, 1, 0, 0, 0)) : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  const fim = mes && ano ? new Date(Date.UTC(ano, mes, 0, 23, 59, 59, 999)) : new Date();
-  const transacoes = await Transacao.find({ user: req.userId, data: { $gte: inicio, $lte: fim } });
+  // Para dashboard, toda despesa lançada conta no mês atual, independente do Venc. — ignora filtro de data para KPIs/pizza
+  const transacoes = await Transacao.find({ user: req.userId });
   const receitas = transacoes.filter(t => t.tipo === 'receita').reduce((s, t) => s + t.valor, 0);
   const despesas = transacoes.filter(t => t.tipo === 'despesa').reduce((s, t) => s + t.valor, 0);
   const porCategoria = Object.entries(transacoes.filter(t => t.tipo === 'despesa').reduce((acc, t) => {
@@ -77,6 +76,17 @@ router.get('/relatorio', async (req, res) => {
     investimento: lista.filter(t => t.tipo === 'investimento').length
   };
   res.json({ filtro, total: lista.length, receitas, despesas, saldo: receitas - despesas, porCategoria, porTipo, transacoes: lista });
+});
+router.put('/:id', async (req, res) => {
+  const t = await Transacao.findOneAndUpdate({ _id: req.params.id, user: req.userId }, req.body, { new: true });
+  res.json(t);
+});
+router.patch('/:id/pago', async (req, res) => {
+  const t = await Transacao.findOne({ _id: req.params.id, user: req.userId });
+  if (!t) return res.status(404).json({ msg: 'Não encontrado' });
+  t.pago = !t.pago;
+  await t.save();
+  res.json(t);
 });
 router.delete('/:id', async (req, res) => {
   await Transacao.deleteOne({ _id: req.params.id, user: req.userId });

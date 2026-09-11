@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
-const VERSAO = 'v1.7.0';
+const VERSAO = 'v1.8.0';
 
 export default function Login() {
   const [email, setEmail] = useState(''); const [senha, setSenha] = useState(''); const [isRegister, setIsRegister] = useState(false);

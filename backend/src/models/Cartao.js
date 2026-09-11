@@ -4,6 +4,10 @@ const cartaoSchema = new mongoose.Schema({
   nome: { type: String, required: true },
   limite: { type: Number, default: 0 },
   vencimento: { type: Number, default: 10 }, // dia
-  cor: { type: String, default: '#4f46e5' }
+  cor: { type: String, default: '#4f46e5' },
+  faturaAtual: { type: Number, default: 0 },
+  limiteUsado: { type: Number, default: 0 },
+  limiteDisponivel: { type: Number, default: 0 },
+  faturasFuturas: { type: Number, default: 0 }
 }, { timestamps: true });
 export default mongoose.model('Cartao', cartaoSchema);

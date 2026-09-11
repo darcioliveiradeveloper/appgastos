@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
-const VERSAO = 'v1.7.0';
+const VERSAO = 'v1.8.0';
 
 export default function HeaderApp(){
   const nav = useNavigate();
@@ -94,6 +94,7 @@ export default function HeaderApp(){
             <p className="text-sm text-slate-600 mt-3"><b>Desenvolvido por</b><br/>Darci Oliveira</p>
             <div className="mt-4 border-t pt-3 space-y-2">
               <p className="font-bold text-sm">Histórico</p>
+              <p className="text-xs text-purple-700 font-bold">v1.8.0 — Set 2026</p><p className="text-xs text-slate-500">Dashboard com gráfico Cartões (Fatura/Disponível/Futuras), Receitas/Despesas/Cartão finalizados, PWA e header ajustados.</p>
               <p className="text-xs text-purple-700 font-bold">v1.7.0 — Set 2026</p><p className="text-xs text-slate-500">Investimentos com edição e exclusão, Cartão com Limites Disponível editável e ordem corrigida.</p>
               <p className="text-xs text-purple-700 font-bold">v1.6.0 — Set 2026</p><p className="text-xs text-slate-500">Despesas padronizada igual Receitas: Período editável, ordem por data, Valor/Ações juntos, edição ✏️🗑️.</p>
               <p className="text-xs text-purple-700 font-bold">v1.5.0 — Set 2026</p><p className="text-xs text-slate-500">Receitas: Período editável 09/12, ordem por data, tabela com Valor e Ações juntos, edição com ✏️🗑️, form alinhado.</p>

@@ -9,6 +9,7 @@ const transacaoSchema = new mongoose.Schema({
   data: { type: Date, default: Date.now },
   periodo: { type: String }, // ex: 09/12
   conta: { type: String, default: 'carteira' }, // carteira, cartão, etc
+  pago: { type: Boolean, default: false },
   recorrente: { type: Boolean, default: false }
 }, { timestamps: true });
 
