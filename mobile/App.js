@@ -4,10 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-// CONFIG: troque pelo IP do notebook quando testar no celular físico
-// Descubra com: ipconfig (Windows) -> IPv4
-const API_URL = 'http://192.168.1.100:5000/api'; // <-- ALTERE PARA SEU IP
-// Para emulador Android use 10.0.2.2, para Expo Go web use localhost
+// Produção: backend no Render (HTTPS). Para teste local, troque pelo IP do notebook.
+const API_URL = 'https://gastos-backend-kdfi.onrender.com/api';
 
 const api = axios.create({ baseURL: API_URL, timeout: 8000 });
 const QUEUE_KEY = '@gastos_queue';

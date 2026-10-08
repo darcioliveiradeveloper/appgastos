@@ -11,4 +11,6 @@ coverage/
 backend/.env
 frontend/dist
 mobile/.expo
+mobile/android/
+mobile/ios/
 .DS_Store
