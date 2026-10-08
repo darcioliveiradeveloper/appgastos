@@ -48,7 +48,10 @@ export default function HeaderApp(){
     <>
       <header className="header-venda">
         <div className="topo-inner">
-          <div className="topo-linha1">AppGastos - Controle Financeiro</div>
+          <div className="flex items-center justify-center gap-3">
+            <img src="/logo.png" alt="DRO" className="w-10 h-10 rounded-lg object-contain bg-white/10" />
+            <div className="topo-linha1">AppGastos - Controle Financeiro</div>
+          </div>
           <div className="topo-linha2">
             <span>{user ? user.nome : 'Carregando...'}</span>
             <span className="topo-botoes">
