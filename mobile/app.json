@@ -4,6 +4,7 @@
     "slug": "appgastos",
     "version": "1.0.0",
     "orientation": "portrait",
+    "newArchEnabled": true,
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -37,6 +38,10 @@
         "projectId": "18135bfc-8bc4-4cc0-aec0-0aea4a86a30d"
       }
     },
-    "owner": "darcioliveiradeveloper"
+    "owner": "darcioliveiradeveloper",
+    "plugins": [
+      "expo-asset",
+      "expo-status-bar"
+    ]
   }
 }
