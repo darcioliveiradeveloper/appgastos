@@ -7,9 +7,16 @@ import axios from 'axios';
 // Produção: backend no Render (HTTPS). Para teste local, troque pelo IP do notebook.
 const API_URL = 'https://gastos-backend-kdfi.onrender.com/api';
 
-const api = axios.create({ baseURL: API_URL, timeout: 8000 });
+// Render free hiberna: o primeiro request pode demorar 60s+ para acordar
+const api = axios.create({ baseURL: API_URL, timeout: 45000 });
 const QUEUE_KEY = '@gastos_queue';
 const CACHE_KEY = '@gastos_cache';
+
+const tentar = async (fn, tentativas = 2) => {
+  for (let i = 0; i < tentativas; i++) {
+    try { return await fn(); } catch (e) { if (i === tentativas - 1) throw e; }
+  }
+};
 
 export default function App() {
   const [resumo, setResumo] = useState(null);
@@ -28,7 +35,7 @@ export default function App() {
 
   const carregar = async () => {
     try {
-      const r = await api.get('/mock/resumo');
+      const r = await tentar(() => api.get('/mock/resumo'));
       setResumo(r.data);
       setOnline(true);
       // tenta buscar lista real se autenticado (ignora 401)
