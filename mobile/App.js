@@ -11,6 +11,14 @@ const API_URL = 'https://gastos-backend-kdfi.onrender.com/api';
 const api = axios.create({ baseURL: API_URL, timeout: 45000 });
 const QUEUE_KEY = '@gastos_queue';
 const CACHE_KEY = '@gastos_cache';
+const TOKEN_KEY = '@gastos_token';
+const USER_KEY = '@gastos_user';
+
+const auth = { token: null };
+api.interceptors.request.use(cfg => {
+  if (auth.token) cfg.headers.Authorization = `Bearer ${auth.token}`;
+  return cfg;
+});
 
 const tentar = async (fn, tentativas = 2) => {
   for (let i = 0; i < tentativas; i++) {
@@ -24,6 +32,9 @@ export default function App() {
   const [queueLen, setQueueLen] = useState(0);
   const [online, setOnline] = useState(true);
   const [form, setForm] = useState({ tipo: 'despesa', categoria: '', valor: '', descricao: '' });
+  const [user, setUser] = useState(null);
+  const [creds, setCreds] = useState({ email: '', senha: '' });
+  const [entrando, setEntrando] = useState(false);
 
   const loadQueue = async () => {
     const raw = await AsyncStorage.getItem(QUEUE_KEY);
@@ -35,16 +46,17 @@ export default function App() {
 
   const carregar = async () => {
     try {
-      const r = await tentar(() => api.get('/mock/resumo'));
-      setResumo(r.data);
-      setOnline(true);
-      // tenta buscar lista real se autenticado (ignora 401)
-      try {
+      if (auth.token) {
+        const r = await tentar(() => api.get('/transacoes/resumo'));
+        setResumo(r.data);
         const t = await api.get('/transacoes');
         setLista(t.data);
         await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(t.data));
-      } catch {}
-      // sincroniza fila pendente
+      } else {
+        const r = await tentar(() => api.get('/mock/resumo'));
+        setResumo(r.data);
+      }
+      setOnline(true);
       await syncQueue();
     } catch (e) {
       setOnline(false);
@@ -54,6 +66,41 @@ export default function App() {
       if (q.length) setLista(prev => [...q.map(x=>({ ...x, _offline:true })), ...prev]);
     }
     await loadQueue();
+  };
+
+  const entrar = async () => {
+    if (!creds.email || !creds.senha) return Alert.alert('Informe email e senha');
+    setEntrando(true);
+    try {
+      const r = await tentar(() => api.post('/auth/login', creds));
+      auth.token = r.data.token;
+      await AsyncStorage.setItem(TOKEN_KEY, r.data.token);
+      await AsyncStorage.setItem(USER_KEY, JSON.stringify(r.data.user));
+      setUser(r.data.user);
+      setOnline(true);
+      setEntrando(false);
+      carregar();
+    } catch (e) {
+      setEntrando(false);
+      Alert.alert('Erro no login', e.response?.data?.msg || 'Não foi possível conectar ao servidor');
+    }
+  };
+
+  const sair = async () => {
+    auth.token = null;
+    await AsyncStorage.multiRemove([TOKEN_KEY, USER_KEY]);
+    setUser(null); setLista([]); setResumo(null);
+    carregar();
+  };
+
+  const restaurar = async () => {
+    const token = await AsyncStorage.getItem(TOKEN_KEY);
+    if (token) {
+      auth.token = token;
+      const u = await AsyncStorage.getItem(USER_KEY);
+      if (u) setUser(JSON.parse(u));
+    }
+    await carregar();
   };
 
   const syncQueue = async () => {
@@ -75,7 +122,7 @@ export default function App() {
     }
   };
 
-  useEffect(() => { carregar(); }, []);
+  useEffect(() => { restaurar(); }, []);
 
   const salvar = async () => {
     if (!form.categoria || !form.valor) return Alert.alert('Preencha categoria e valor');
@@ -102,6 +149,23 @@ export default function App() {
       <Text style={styles.title}>💰 Gastos</Text>
       <Text style={styles.sub}>PWA + Expo • Offline-first</Text>
 
+      <View style={styles.userRow}>
+        {user ? (
+          <TouchableOpacity onPress={sair}><Text style={styles.userTxt}>👤 {user.nome} • sair</Text></TouchableOpacity>
+        ) : (
+          <Text style={styles.userTxt}>visitante • dados de exemplo</Text>
+        )}
+      </View>
+
+      {!user && (
+        <View style={styles.form}>
+          <Text style={styles.section}>🔑 Entrar</Text>
+          <TextInput style={styles.input} placeholder="Email" autoCapitalize="none" keyboardType="email-address" value={creds.email} onChangeText={v=>setCreds({...creds,email:v})} />
+          <TextInput style={styles.input} placeholder="Senha" secureTextEntry value={creds.senha} onChangeText={v=>setCreds({...creds,senha:v})} />
+          <Button title={entrando ? 'Entrando...' : 'Entrar'} onPress={entrar} disabled={entrando} color="#0f172a" />
+        </View>
+      )}
+
       <View style={[styles.badge, { backgroundColor: online ? '#dcfce7' : '#fee2e2' }]}>
         <Text style={{ color: online ? '#166534' : '#991b1b', fontWeight:'bold' }}>{online ? '🟢 Online - Atlas sincronizado' : `🔴 Offline - ${queueLen} pendentes`}</Text>
         {!online && queueLen>0 && <TouchableOpacity onPress={syncQueue} style={styles.syncBtn}><Text style={{color:'#fff'}}>Sincronizar</Text></TouchableOpacity>}
@@ -115,16 +179,20 @@ export default function App() {
         </View>
       )}
 
-      <View style={styles.form}>
-        <Text style={styles.section}>+ Novo Lançamento {online?'':'📴'}</Text>
-        <View style={{ flexDirection:'row', gap: 8 }}>
-          <TextInput style={[styles.input,{flex:1}]} placeholder="Categoria" value={form.categoria} onChangeText={v=>setForm({...form,categoria:v})} />
-          <TextInput style={[styles.input,{flex:1}]} placeholder="Valor" keyboardType="numeric" value={form.valor} onChangeText={v=>setForm({...form,valor:v})} />
+      {user ? (
+        <View style={styles.form}>
+          <Text style={styles.section}>+ Novo Lançamento {online?'':'📴'}</Text>
+          <View style={{ flexDirection:'row', gap: 8 }}>
+            <TextInput style={[styles.input,{flex:1}]} placeholder="Categoria" value={form.categoria} onChangeText={v=>setForm({...form,categoria:v})} />
+            <TextInput style={[styles.input,{flex:1}]} placeholder="Valor" keyboardType="numeric" value={form.valor} onChangeText={v=>setForm({...form,valor:v})} />
+          </View>
+          <TextInput style={styles.input} placeholder="Descrição" value={form.descricao} onChangeText={v=>setForm({...form,descricao:v})} />
+          <Button title={online? 'Adicionar e sincronizar' : '💾 Salvar offline'} onPress={salvar} color="#0f172a" />
+          <Text style={styles.hint}>API: {API_URL} • Dados locais AsyncStorage + Atlas. {queueLen>0? `${queueLen} pendentes` : 'Tudo sincronizado'}</Text>
         </View>
-        <TextInput style={styles.input} placeholder="Descrição" value={form.descricao} onChangeText={v=>setForm({...form,descricao:v})} />
-        <Button title={online? 'Adicionar e sincronizar' : '💾 Salvar offline'} onPress={salvar} color="#0f172a" />
-        <Text style={styles.hint}>API: {API_URL} • Dados locais AsyncStorage + Atlas. {queueLen>0? `${queueLen} pendentes` : 'Tudo sincronizado'}</Text>
-      </View>
+      ) : (
+        <Text style={[styles.hint, { marginBottom: 16 }]}>Entre para registrar lançamentos nos seus dados.</Text>
+      )}
 
       <Text style={styles.section}>Últimos Lançamentos ({lista.length})</Text>
       {lista.map(item=>(
@@ -153,5 +221,7 @@ const styles = StyleSheet.create({
   input:{ borderWidth:1, borderColor:'#e2e8f0', borderRadius:8, padding:10, backgroundColor:'#fff' },
   section:{ fontWeight:'bold', fontSize:16, marginVertical:8, color:'#0f172a' },
   item:{ backgroundColor:'#fff', padding:12, borderRadius:8, flexDirection:'row', justifyContent:'space-between', marginBottom:6, alignItems:'center' },
-  hint:{ fontSize:11, color:'#94a3b8' }
+  hint:{ fontSize:11, color:'#94a3b8' },
+  userRow:{ marginBottom:12 },
+  userTxt:{ fontSize:12, color:'#64748b', fontWeight:'bold' }
 });
